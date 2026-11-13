@@ -1,0 +1,1135 @@
+{
+  "openapi": "3.0.1",
+  "info": {
+    "title": "Starburst Galaxy Public API",
+    "version": "v2"
+  },
+  "security": [
+    {
+      "accessToken": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "DataProduct Service",
+      "description": "Data Product related operations"
+    },
+    {
+      "name": "About",
+      "description": "APIs for managing your Starburst Galaxy account. Learn more about <a href=\"https://docs.starburst.io/starburst-galaxy/api.html\" style=\"text-decoration: none !important\" target=\"_blank\">the Starburst Galaxy Public API ↗️</a>.\n\n\n<a href=\"/public/openapi/v2/json\" style=\"text-decoration: none !important\" download=\"openApi.json\">⬇️ Download OpenAPI specification</a>\n"
+    },
+    {
+      "name": "API Versions",
+      "description": "Two versions of the Starburst Galaxy Public API are available:\n\n* **V1** — stable API covering account management, catalogs, clusters, roles, policies, and data discovery.\n\n  [Download the V1 specification](/public/openapi/v1/json)\n\n* **V2** — introduces new versions of existing resources such as Data Products.\n\n  [Download the V2 specification](/public/openapi/v2/json)\n"
+    },
+    {
+      "name": "Access Tokens",
+      "description": "Access tokens are obtained using the OAuth2 credentials flow and API authentication tokens.\n\n1. Create an API authentication token at `https://{account-domain}/api-auth-token`\n2. Use the API authentication token to obtain a temporary access token by POST to `https://{account-domain}/oauth/v2/token`. The request must have a Basic Authorization header with the client ID and secret Base64 encoded in the form `clientId:clientSecret`. The request body must be `grant_type=client_credentials`.\n\n`cURL` example:\n\n```\ncurl -X POST \\\n  -H 'Authorization: Basic {base64(clientId:clientSecret)}' \\\n  -H 'Content-Type: application/x-www-form-urlencoded' \\\n  -d 'grant_type=client_credentials' \\\n  https://{account-domain}/oauth/v2/token\n```\n\nThe access token returned can be used to make API calls with the header `Authorization: Bearer {access token}`.\n"
+    },
+    {
+      "name": "Model Definitions",
+      "description": ""
+    },
+    {
+      "name": "Responses",
+      "description": ""
+    }
+  ],
+  "paths": {
+    "/public/api/v2/dataProduct": {
+      "get": {
+        "tags": [
+          "DataProduct Service"
+        ],
+        "description": "Return a paginated list of Data Products that are visible to the logged in role\n\n**BETA API:** This API is subject to incompatible changes, or even removal, in the future.",
+        "operationId": "listDataProduct",
+        "parameters": [
+          {
+            "in": "query",
+            "name": "pageToken",
+            "description": "Pagination token",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "in": "query",
+            "name": "pageSize",
+            "description": "Page size or 0 for default (current maximum is 100)",
+            "required": false,
+            "schema": {
+              "format": "int32",
+              "type": "integer",
+              "nullable": false
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/PaginatedDataProductV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ApiBadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiForbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiNotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "DataProduct Service"
+        ],
+        "description": "Create a Data Product\n\n**BETA API:** This API is subject to incompatible changes, or even removal, in the future.",
+        "operationId": "createDataProduct",
+        "parameters": [],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDataProductV2"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataProductV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ApiBadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiForbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "NotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFoundError"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ApiAlreadyExists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exists"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/public/api/v2/dataProduct/{dataProductId}": {
+      "get": {
+        "tags": [
+          "DataProduct Service"
+        ],
+        "description": "Get Data Product by id\n\n**BETA API:** This API is subject to incompatible changes, or even removal, in the future.",
+        "operationId": "getDataProduct",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dataProductId",
+            "description": "A Galaxy Data Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataProductV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ApiBadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiForbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiNotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "DataProduct Service"
+        ],
+        "description": "Delete a Data Product\n\n**BETA API:** This API is subject to incompatible changes, or even removal, in the future.",
+        "operationId": "deleteDataProduct",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dataProductId",
+            "description": "A Galaxy Data Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Success"
+          },
+          "400": {
+            "description": "ApiBadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiForbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiNotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "DataProduct Service"
+        ],
+        "description": "Update a Data Product\n\n**BETA API:** This API is subject to incompatible changes, or even removal, in the future.\n\nOnly include fields you wish to update. Missing or unrecognized fields are ignored.",
+        "operationId": "patchUpdateDataProduct",
+        "parameters": [
+          {
+            "in": "path",
+            "name": "dataProductId",
+            "description": "A Galaxy Data Product",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateDataProductV2Patch"
+              }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Success",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DataProductV2"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "ApiBadRequest",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/BadRequest"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "ApiUnauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Unauthorized"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "ApiForbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Forbidden"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "ApiNotFound",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/NotFound"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "ApiAlreadyExists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Exists"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "AlreadyExists": {
+        "required": [
+          "detail",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/Resourceinfo"
+          }
+        },
+        "description": "The resource that a client tried to create already exists.",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "BadRequest": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          },
+          "fields": {
+            "type": "array",
+            "description": "Any fields/values that are invalid or incorrect",
+            "items": {
+              "type": "string",
+              "description": "Any fields/values that are invalid or incorrect"
+            }
+          }
+        },
+        "description": "Invalid request",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Badrequest": {
+        "required": [
+          "fieldViolations"
+        ],
+        "properties": {
+          "fieldViolations": {
+            "type": "array",
+            "description": "Field violations (read only)",
+            "items": {
+              "$ref": "#/components/schemas/Fieldviolation"
+            }
+          }
+        },
+        "description": "Error details (read only)",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "CreateDataProductV2": {
+        "required": [
+          "catalogId",
+          "contacts",
+          "dataDomain",
+          "name",
+          "schemaName",
+          "summary"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Data Product name"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short summary of Data Product"
+          },
+          "description": {
+            "type": "string",
+            "description": "Long form description of Data Product"
+          },
+          "catalogId": {
+            "type": "string",
+            "description": "Catalog ID"
+          },
+          "schemaName": {
+            "type": "string",
+            "description": "Name of the data product schema"
+          },
+          "contacts": {
+            "type": "array",
+            "description": "Data Product contacts",
+            "items": {
+              "$ref": "#/components/schemas/UserAndEmail"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "Any links for this Data Product",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          },
+          "defaultClusterId": {
+            "type": "string",
+            "description": "Default cluster ID for Data Product"
+          },
+          "businessContext": {
+            "type": "string",
+            "description": "Business context for the Data Product, used to guide AI agents"
+          },
+          "dataDomain": {
+            "$ref": "#/components/schemas/DataDomainReference"
+          }
+        },
+        "description": "Create a Galaxy Data Product with a mandatory Data Domain",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataDomainReference": {
+        "required": [
+          "referenceType"
+        ],
+        "properties": {
+          "referenceType": {
+            "type": "string"
+          }
+        },
+        "description": "Owning Data Domain, identified by either id or name",
+        "discriminator": {
+          "propertyName": "referenceType",
+          "mapping": {
+            "id": "#/components/schemas/DataDomainReferenceId",
+            "name": "#/components/schemas/DataDomainReferenceName",
+            "default": "#/components/schemas/DataDomainReferenceDefault"
+          }
+        },
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataDomainReferenceDefault": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataDomainReference"
+          },
+          {
+            "description": "Reference the account's default Data Domain",
+            "x-tags": [
+              "Model Definitions"
+            ]
+          }
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataDomainReferenceId": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataDomainReference"
+          },
+          {
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "description": "Data Domain ID"
+              }
+            },
+            "description": "Reference a Data Domain by its id",
+            "x-tags": [
+              "Model Definitions"
+            ]
+          }
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataDomainReferenceName": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/DataDomainReference"
+          },
+          {
+            "required": [
+              "name"
+            ],
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "Data Domain name"
+              }
+            },
+            "description": "Reference a Data Domain by its name",
+            "x-tags": [
+              "Model Definitions"
+            ]
+          }
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataProductCatalogDetails": {
+        "required": [
+          "catalogId",
+          "catalogKind",
+          "catalogName",
+          "localRegions"
+        ],
+        "properties": {
+          "catalogId": {
+            "type": "string",
+            "description": "Catalog Id (read only)"
+          },
+          "catalogName": {
+            "type": "string",
+            "description": "Name of the catalog (read only)"
+          },
+          "catalogKind": {
+            "type": "string",
+            "description": "Kind of catalog (read only)"
+          },
+          "localRegions": {
+            "type": "array",
+            "description": "Set of local regions for the catalog (read only)",
+            "items": {
+              "type": "string",
+              "description": "Set of local regions for the catalog (read only)"
+            }
+          }
+        },
+        "description": "Catalog details (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "DataProductV2": {
+        "required": [
+          "contacts",
+          "createdOn",
+          "dataDomainId",
+          "dataProductId",
+          "links",
+          "modifiedOn",
+          "name",
+          "summary",
+          "syncToken"
+        ],
+        "properties": {
+          "syncToken": {
+            "type": "string",
+            "description": "Used to ensure consistency for resource updates. A syncToken that is returned\nfrom the server is valid until the resource is updated when a new syncToken will\nbe generated. Only the latest version of the object is maintained.\n (read only)"
+          },
+          "dataProductId": {
+            "type": "string",
+            "description": "Data Product ID (read only)"
+          },
+          "name": {
+            "type": "string",
+            "description": "Data Product name (read only)"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short summary of Data Product (read only)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Long form description of Data Product (read only)"
+          },
+          "catalog": {
+            "$ref": "#/components/schemas/DataProductCatalogDetails"
+          },
+          "schemaName": {
+            "type": "string",
+            "description": "Name of the data product schema (read only)"
+          },
+          "contacts": {
+            "type": "array",
+            "description": "Data Product contacts (read only)",
+            "items": {
+              "$ref": "#/components/schemas/UserAndEmail"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "Any links for this Data Product (read only)",
+            "items": {
+              "$ref": "#/components/schemas/Link"
+            }
+          },
+          "defaultClusterId": {
+            "type": "string",
+            "description": "Default cluster ID for Data Product (read only)"
+          },
+          "dataDomainId": {
+            "type": "string",
+            "description": "Owning Data Domain ID (read only)"
+          },
+          "createdOn": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Creation date (read only)"
+          },
+          "modifiedOn": {
+            "format": "date-time",
+            "type": "string",
+            "description": "Modified date (read only)"
+          },
+          "createdBy": {
+            "$ref": "#/components/schemas/UserAndEmail2"
+          },
+          "modifiedBy": {
+            "$ref": "#/components/schemas/UserAndEmail2"
+          },
+          "businessContext": {
+            "type": "string",
+            "description": "Business context for the Data Product, used to guide AI agents (read only)"
+          }
+        },
+        "description": "A Galaxy Data Product",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "Default": {
+        "description": "Reference the account's default Data Domain",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "Exists": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": ""
+          }
+        },
+        "description": "Already exists",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Fieldviolation": {
+        "required": [
+          "description",
+          "field"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Field name"
+          },
+          "description": {
+            "type": "string",
+            "description": "Description of the violation"
+          }
+        },
+        "description": "Field violations (read only)",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Forbidden": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": ""
+          }
+        },
+        "description": "Authorization failed",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Id": {
+        "required": [
+          "id"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Data Domain ID"
+          }
+        },
+        "description": "Reference a Data Domain by its id",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "InvalidArgument": {
+        "required": [
+          "detail",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/Badrequest"
+          }
+        },
+        "description": "Client specified an invalid argument. Check error message and error details for more information.",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Link": {
+        "required": [
+          "name",
+          "uri"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the link"
+          },
+          "uri": {
+            "type": "string",
+            "description": "The link URI"
+          }
+        },
+        "description": "Any links for this Data Product (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "LinkPatch": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the link"
+          },
+          "uri": {
+            "type": "string",
+            "description": "The link URI"
+          }
+        },
+        "description": "Any links for this Data Product",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "Name": {
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Data Domain name"
+          }
+        },
+        "description": "Reference a Data Domain by its name",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "NoLongerAvailable": {
+        "required": [
+          "detail",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/Resourceinfo"
+          }
+        },
+        "description": "Invalid or expired ID or token",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "NotFound": {
+        "required": [
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Name of the resource"
+          },
+          "description": {
+            "type": "string",
+            "description": "Violation description"
+          },
+          "fields": {
+            "type": "array",
+            "description": "Any fields/values that weren't found",
+            "items": {
+              "type": "string",
+              "description": "Any fields/values that weren't found"
+            }
+          }
+        },
+        "description": "A resource or required component was not found",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "NotFoundError": {
+        "required": [
+          "detail",
+          "message"
+        ],
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": "Description of the error"
+          },
+          "detail": {
+            "$ref": "#/components/schemas/Resourceinfo"
+          }
+        },
+        "description": "A specified resource is not found.",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "PaginatedDataProductV2": {
+        "properties": {
+          "nextPageToken": {
+            "type": "string",
+            "description": "The next page token to use or \"\" if there are no more pages."
+          },
+          "result": {
+            "type": "array",
+            "description": "A page of results.",
+            "items": {
+              "$ref": "#/components/schemas/DataProductV2"
+            }
+          }
+        },
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "Resourceinfo": {
+        "required": [
+          "description",
+          "resourceName"
+        ],
+        "properties": {
+          "resourceName": {
+            "type": "string",
+            "description": "Name of the resource (read only)"
+          },
+          "description": {
+            "type": "string",
+            "description": "Violation description (read only)"
+          }
+        },
+        "description": "Error details (read only)",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "Unauthorized": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "description": ""
+          }
+        },
+        "description": "Authorization failed",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "UpdateDataProductV2Patch": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "Data Product name"
+          },
+          "summary": {
+            "type": "string",
+            "description": "Short summary of Data Product"
+          },
+          "description": {
+            "type": "string",
+            "description": "Long form description of Data Product"
+          },
+          "contacts": {
+            "type": "array",
+            "description": "Data Product contacts",
+            "items": {
+              "$ref": "#/components/schemas/UserAndEmailPatch"
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "Any links for this Data Product",
+            "items": {
+              "$ref": "#/components/schemas/LinkPatch"
+            }
+          },
+          "defaultClusterId": {
+            "type": "string",
+            "description": "Default cluster ID for Data Product"
+          },
+          "dataDomainId": {
+            "type": "string",
+            "description": "Owning Data Domain ID"
+          },
+          "businessContext": {
+            "type": "string",
+            "description": "Business context for the Data Product, used to guide AI agents"
+          }
+        },
+        "description": "Update a Galaxy Data Product",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "UserAndEmail": {
+        "required": [
+          "email",
+          "userId"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          }
+        },
+        "description": "Data Product contacts (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "UserAndEmail2": {
+        "required": [
+          "email",
+          "userId"
+        ],
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          }
+        },
+        "description": "Created by user. If empty then the user is inactive/deleted. (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "UserAndEmailPatch": {
+        "properties": {
+          "userId": {
+            "type": "string",
+            "description": "User ID"
+          },
+          "email": {
+            "type": "string",
+            "description": "User email"
+          }
+        },
+        "description": "Data Product contacts",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      }
+    }
+  },
+  "x-tagGroups": [
+    {
+      "name": "Help",
+      "tags": [
+        "About",
+        "API Versions",
+        "Access Tokens"
+      ]
+    },
+    {
+      "name": "Services",
+      "tags": [
+        "DataProduct Service"
+      ]
+    },
+    {
+      "name": "Models",
+      "tags": [
+        "Model Definitions",
+        "Responses"
+      ]
+    }
+  ]
+}
