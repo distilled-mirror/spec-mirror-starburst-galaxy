@@ -16902,6 +16902,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Access token"
+      }
+    },
     "schemas": {
       "Aborted": {
         "required": [
@@ -16922,30 +16929,6 @@
           "Responses"
         ]
       },
-      "AccessKey": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Username"
-          },
-          "accessKey": {
-            "type": "string",
-            "description": "AWS access key"
-          },
-          "secretKey": {
-            "type": "string",
-            "description": "AWS secret key"
-          },
-          "region": {
-            "type": "string",
-            "description": "AWS region"
-          }
-        },
-        "description": "Authenticate with an AWS access key and secret key pair",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "AlreadyExists": {
         "required": [
           "detail",
@@ -16963,60 +16946,6 @@
         "description": "The resource that a client tried to create already exists.",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "ApacheCassandraConnection": {
-        "properties": {
-          "contactPoints": {
-            "type": "string",
-            "description": "Cassandra hosts"
-          },
-          "localDatacenter": {
-            "type": "string",
-            "description": "Local datacenter"
-          },
-          "port": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Cassandra port. Defaults to 9042.",
-            "nullable": false
-          },
-          "username": {
-            "type": "string",
-            "description": "Cassandra username"
-          },
-          "password": {
-            "type": "string",
-            "description": "Cassandra password"
-          },
-          "sshTunnelId": {
-            "type": "string",
-            "description": "SSH tunnel identifier"
-          }
-        },
-        "description": "Connect to Cassandra instance",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "AstraDBConnection": {
-        "properties": {
-          "databaseId": {
-            "type": "string",
-            "description": "AstraDB database ID"
-          },
-          "region": {
-            "type": "string",
-            "description": "AstraDB region"
-          },
-          "token": {
-            "type": "string",
-            "description": "AstraDB token"
-          }
-        },
-        "description": "Connect to AstraDB instance",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "BadRequest": {
@@ -17055,38 +16984,6 @@
         "description": "Error details (read only)",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "Basic": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Username"
-          },
-          "password": {
-            "type": "string",
-            "description": "Password"
-          }
-        },
-        "description": "Authenticate with a username and password",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "BasicAwsCredentials": {
-        "properties": {
-          "accessKeyId": {
-            "type": "string",
-            "description": "AWS access key ID"
-          },
-          "secretAccessKey": {
-            "type": "string",
-            "description": "AWS secret access key"
-          }
-        },
-        "description": "AWS access key and secret credentials",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "BigQueryCatalog": {
@@ -17216,12 +17113,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Cassandra cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "deploymentType": {
@@ -17349,12 +17245,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Cassandra cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "deploymentType": {
@@ -17565,6 +17460,19 @@
           "Model Definitions"
         ]
       },
+      "Category": {
+        "type": "string",
+        "enum": [
+          "Validity",
+          "Completeness",
+          "Consistency",
+          "Accuracy",
+          "None"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
       "CategoryEvaluationCounts": {
         "required": [
           "category",
@@ -17574,14 +17482,11 @@
         ],
         "properties": {
           "category": {
-            "type": "string",
             "description": "Data quality check category",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "totalEvaluations": {
@@ -17604,6 +17509,17 @@
           }
         },
         "description": "Counts grouped by category (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "CloudKind": {
+        "type": "string",
+        "enum": [
+          "AWS",
+          "AZURE",
+          "GCP"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -17833,11 +17749,11 @@
             "description": "Connection URL (read only)"
           },
           "processingMode": {
-            "type": "string",
             "description": "Cluster query processing mode (extended field) (read only)",
-            "enum": [
-              "Batch",
-              "WarpSpeed"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClusterQueryProcessingMode"
+              }
             ]
           },
           "privateLinkCluster": {
@@ -17863,6 +17779,16 @@
           }
         },
         "description": "A Trino cluster",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "ClusterQueryProcessingMode": {
+        "type": "string",
+        "enum": [
+          "Batch",
+          "WarpSpeed"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -17937,22 +17863,11 @@
             "description": "Column Mask expression (read only)"
           },
           "columnMaskType": {
-            "type": "string",
             "description": "Column Mask type (read only)",
-            "enum": [
-              "Any",
-              "Integer",
-              "Boolean",
-              "Date",
-              "Decimal",
-              "Real",
-              "Double",
-              "Timestamp",
-              "TimestampWithTimeZone",
-              "Time",
-              "TimeWithTimeZone",
-              "Varbinary",
-              "Varchar"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ColumnMaskType"
+              }
             ]
           },
           "description": {
@@ -17971,6 +17886,27 @@
           }
         },
         "description": "A column mask",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "ColumnMaskType": {
+        "type": "string",
+        "enum": [
+          "Any",
+          "Integer",
+          "Boolean",
+          "Date",
+          "Decimal",
+          "Real",
+          "Double",
+          "Timestamp",
+          "TimestampWithTimeZone",
+          "Time",
+          "TimeWithTimeZone",
+          "Varbinary",
+          "Varchar"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -18044,12 +17980,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Cassandra cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "deploymentType": {
@@ -18188,11 +18123,11 @@
             "nullable": false
           },
           "processingMode": {
-            "type": "string",
             "description": "Cluster query processing mode",
-            "enum": [
-              "Batch",
-              "WarpSpeed"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClusterQueryProcessingMode"
+              }
             ]
           },
           "minWorkers": {
@@ -18257,22 +18192,11 @@
             "description": "Column mask expression (read only)"
           },
           "columnMaskType": {
-            "type": "string",
             "description": "Column mask type (read only)",
-            "enum": [
-              "Any",
-              "Integer",
-              "Boolean",
-              "Date",
-              "Decimal",
-              "Real",
-              "Double",
-              "Timestamp",
-              "TimestampWithTimeZone",
-              "Time",
-              "TimeWithTimeZone",
-              "Varbinary",
-              "Varchar"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ColumnMaskType"
+              }
             ]
           },
           "description": {
@@ -18426,32 +18350,27 @@
             "description": "Either expression or SQL query that implements the data quality check logic."
           },
           "severity": {
-            "type": "string",
             "description": "Severity level of check failures",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "category": {
-            "type": "string",
             "description": "Category of data quality check",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "kind": {
-            "type": "string",
             "description": "Kind of data quality check",
-            "enum": [
-              "QualityExpression",
-              "SqlQuery"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Kind"
+              }
             ]
           },
           "clusterId": {
@@ -18653,12 +18572,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MongoDB cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -18817,12 +18735,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MySQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -19159,12 +19076,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "PostgreSQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -19674,12 +19590,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Snowflake cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "accountIdentifier": {
@@ -19799,12 +19714,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "SQL Server cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -19973,48 +19887,34 @@
           "Model Definitions"
         ]
       },
-      "CsvParameters": {
-        "required": [
-          "delimiter",
-          "escapeChar",
-          "numHeaderLinesToExclude",
-          "quoteChar"
+      "CsvDelimiter": {
+        "type": "string",
+        "enum": [
+          "Comma",
+          "Tab",
+          "Pipe",
+          "Semicolon"
         ],
-        "properties": {
-          "delimiter": {
-            "type": "string",
-            "description": "CSV delimiter character",
-            "enum": [
-              "Comma",
-              "Tab",
-              "Pipe",
-              "Semicolon"
-            ]
-          },
-          "quoteChar": {
-            "type": "string",
-            "description": "CSV quote character",
-            "enum": [
-              "DoubleQuote",
-              "SingleQuote"
-            ]
-          },
-          "escapeChar": {
-            "type": "string",
-            "description": "CSV escape character",
-            "enum": [
-              "DoubleQuote",
-              "Backslash"
-            ]
-          },
-          "numHeaderLinesToExclude": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Number of CSV header lines to exclude",
-            "nullable": false
-          }
-        },
-        "description": "CSV format parameters. Required for CSV format, must be absent for other formats",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "CsvEscapeChar": {
+        "type": "string",
+        "enum": [
+          "DoubleQuote",
+          "Backslash"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "CsvQuoteChar": {
+        "type": "string",
+        "enum": [
+          "DoubleQuote",
+          "SingleQuote"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -20444,32 +20344,27 @@
             "description": "Either expression or SQL query that implements the data quality check logic."
           },
           "kind": {
-            "type": "string",
             "description": "Kind of data quality check.",
-            "enum": [
-              "QualityExpression",
-              "SqlQuery"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Kind"
+              }
             ]
           },
           "severity": {
-            "type": "string",
             "description": "Severity level of check failures",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "category": {
-            "type": "string",
             "description": "Category of data quality check",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "syncToken": {
@@ -20500,11 +20395,11 @@
             "description": "For 'QualityExpression' kind quality checks - time of stats that were used to evaluate. (read only)"
           },
           "status": {
-            "type": "string",
             "description": "Evaluation Status (read only)",
-            "enum": [
-              "Failure",
-              "Success"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationStatus"
+              }
             ]
           },
           "predicate": {
@@ -20535,11 +20430,11 @@
             "description": "For 'QualityExpression' kind quality checks - time of stats that were used to evaluate. (read only)"
           },
           "status": {
-            "type": "string",
             "description": "Evaluation Status (read only)",
-            "enum": [
-              "Failure",
-              "Success"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EvaluationStatus"
+              }
             ]
           },
           "predicate": {
@@ -20694,32 +20589,27 @@
             "description": "Either expression or SQL query that implements the data quality check logic."
           },
           "kind": {
-            "type": "string",
             "description": "Kind of data quality check.",
-            "enum": [
-              "QualityExpression",
-              "SqlQuery"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Kind"
+              }
             ]
           },
           "severity": {
-            "type": "string",
             "description": "Severity level of check failures",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "category": {
-            "type": "string",
             "description": "Category of data quality check",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "syncToken": {
@@ -20779,32 +20669,27 @@
             "description": "Either expression or SQL query that implements the data quality check logic."
           },
           "kind": {
-            "type": "string",
             "description": "Kind of data quality check.",
-            "enum": [
-              "QualityExpression",
-              "SqlQuery"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Kind"
+              }
             ]
           },
           "severity": {
-            "type": "string",
             "description": "Severity level of check failures",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "category": {
-            "type": "string",
             "description": "Category of data quality check",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "syncToken": {
@@ -21020,30 +20905,6 @@
           "Model Definitions"
         ]
       },
-      "DirectMongoDBConnection": {
-        "properties": {
-          "hosts": {
-            "type": "string",
-            "description": "MongoDB hosts"
-          }
-        },
-        "description": "Connect directly to MongoDB instance",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "DirectMySQLConnection": {
-        "properties": {
-          "host": {
-            "type": "string",
-            "description": "MySQL host"
-          }
-        },
-        "description": "Connect directly to MySQL instance",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "DiscoveredSqlStatement": {
         "required": [
           "sql",
@@ -21055,14 +20916,11 @@
             "description": "Raw generated SQL (read only)"
           },
           "status": {
-            "type": "string",
             "description": "Status of the statement (read only)",
-            "enum": [
-              "Waiting",
-              "Applying",
-              "Success",
-              "Errored",
-              "Canceled"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/StatementStatus"
+              }
             ]
           },
           "message": {
@@ -21071,6 +20929,32 @@
           }
         },
         "description": "Generated SQL statements (read only)",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "EntityKind": {
+        "type": "string",
+        "enum": [
+          "Account",
+          "AiModel",
+          "AgentSkill",
+          "ExternalMcpServer",
+          "AgentPersona",
+          "Cluster",
+          "Catalog",
+          "Schema",
+          "Table",
+          "Column",
+          "Location",
+          "Function",
+          "Tag",
+          "TableBranch",
+          "Policy",
+          "RowFilter",
+          "DataProduct",
+          "DataDomain"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -21118,115 +21002,12 @@
           "Model Definitions"
         ]
       },
-      "ExistingJsonIngestColumn": {
-        "required": [
-          "columnId",
-          "fieldParserConfig",
-          "trinoColumnName",
-          "trinoType"
+      "EvaluationStatus": {
+        "type": "string",
+        "enum": [
+          "Failure",
+          "Success"
         ],
-        "properties": {
-          "columnId": {
-            "format": "int32",
-            "type": "integer",
-            "description": "ID of the transform column",
-            "nullable": false
-          },
-          "trinoColumnName": {
-            "type": "string",
-            "description": "Name of the transform column; adheres to Trino conventions"
-          },
-          "fieldParserConfig": {
-            "required": [
-              "pointer"
-            ],
-            "properties": {
-              "pointer": {
-                "type": "string",
-                "description": "JSON pointer (IETF RFC 6901)"
-              },
-              "parseParameters": {
-                "type": "object",
-                "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n",
-                "additionalProperties": {
-                  "type": "string",
-                  "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n"
-                }
-              }
-            },
-            "description": "JSON pointer (and parsing parameters) to the raw-table field transformed into this column value",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          },
-          "trinoType": {
-            "required": [
-              "typeId"
-            ],
-            "properties": {
-              "typeId": {
-                "type": "string",
-                "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
-                ]
-              },
-              "typeParameters": {
-                "type": "object",
-                "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                "additionalProperties": {
-                  "type": "string",
-                  "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                }
-              }
-            },
-            "description": "Column type; adheres to Trino conventions",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          },
-          "nestedColumns": {
-            "type": "array",
-            "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-            "items": {
-              "required": [
-                "typeKey"
-              ],
-              "properties": {
-                "typeKey": {
-                  "type": "string"
-                }
-              },
-              "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-              "discriminator": {
-                "propertyName": "typeKey",
-                "mapping": {
-                  "newJsonIngestColumnInSchemaUpdate": "#/components/schemas/UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate2",
-                  "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn"
-                }
-              },
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "An existing column; same ID but other properties may differ",
         "x-tags": [
           "Model Definitions"
         ]
@@ -21241,18 +21022,6 @@
         "description": "Already exists",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "ExternalIamRole": {
-        "properties": {
-          "externalRoleArn": {
-            "type": "string",
-            "description": "ARN of the external IAM role"
-          }
-        },
-        "description": "External IAM role credentials",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "FailedPrecondition": {
@@ -21274,25 +21043,21 @@
           "Responses"
         ]
       },
-      "FanoutColumn": {
-        "required": [
-          "transform",
-          "trinoColumnName"
+      "FailureMode": {
+        "type": "string",
+        "enum": [
+          "Continue",
+          "FailFast"
         ],
-        "properties": {
-          "trinoColumnName": {
-            "type": "string",
-            "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
-          },
-          "transform": {
-            "type": "string",
-            "description": "Transform applied to the column value to form the route",
-            "enum": [
-              "Identity"
-            ]
-          }
-        },
-        "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "FanoutTransform": {
+        "type": "string",
+        "enum": [
+          "Identity"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -21317,83 +21082,12 @@
           "Responses"
         ]
       },
-      "FileIngestProperties": {
-        "required": [
-          "fileFormat",
-          "fileIngestSourceId",
-          "pollingIntervalInMinutes"
+      "FileFormat": {
+        "type": "string",
+        "enum": [
+          "Json",
+          "Csv"
         ],
-        "properties": {
-          "fileIngestSourceId": {
-            "type": "string",
-            "description": "ID of the file ingest source obtained from the /fileIngestSource endpoint"
-          },
-          "pathSuffix": {
-            "type": "string",
-            "description": "Suffix to append to the name from ingest source"
-          },
-          "fileFormat": {
-            "type": "string",
-            "description": "File format",
-            "enum": [
-              "Json",
-              "Csv"
-            ]
-          },
-          "pollingIntervalInMinutes": {
-            "format": "int32",
-            "type": "integer",
-            "description": "List files in object storage every polling interval",
-            "nullable": false
-          },
-          "csvParameters": {
-            "required": [
-              "delimiter",
-              "escapeChar",
-              "numHeaderLinesToExclude",
-              "quoteChar"
-            ],
-            "properties": {
-              "delimiter": {
-                "type": "string",
-                "description": "CSV delimiter character",
-                "enum": [
-                  "Comma",
-                  "Tab",
-                  "Pipe",
-                  "Semicolon"
-                ]
-              },
-              "quoteChar": {
-                "type": "string",
-                "description": "CSV quote character",
-                "enum": [
-                  "DoubleQuote",
-                  "SingleQuote"
-                ]
-              },
-              "escapeChar": {
-                "type": "string",
-                "description": "CSV escape character",
-                "enum": [
-                  "DoubleQuote",
-                  "Backslash"
-                ]
-              },
-              "numHeaderLinesToExclude": {
-                "format": "int32",
-                "type": "integer",
-                "description": "Number of CSV header lines to exclude",
-                "nullable": false
-              }
-            },
-            "description": "CSV format parameters. Required for CSV format, must be absent for other formats",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          }
-        },
-        "description": "Properties for a live table ingesting from a file",
         "x-tags": [
           "Model Definitions"
         ]
@@ -21479,25 +21173,11 @@
             ],
             "properties": {
               "typeId": {
-                "type": "string",
                 "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TypeId"
+                  }
                 ]
               },
               "typeParameters": {
@@ -21531,151 +21211,6 @@
           "Model Definitions"
         ]
       },
-      "FilterAndProjectTransformProperties": {
-        "required": [
-          "columns",
-          "filterExpressions",
-          "liveTableId"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source transform table"
-          },
-          "columns": {
-            "type": "array",
-            "description": "Output columns and the expressions that produce their values",
-            "items": {
-              "required": [
-                "columnId",
-                "nestedColumns",
-                "trinoColumnName",
-                "trinoType"
-              ],
-              "properties": {
-                "columnId": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "ID of the transform column",
-                  "nullable": false
-                },
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name"
-                },
-                "trinoType": {
-                  "required": [
-                    "typeId"
-                  ],
-                  "properties": {
-                    "typeId": {
-                      "type": "string",
-                      "description": "Trino type enum",
-                      "enum": [
-                        "Boolean",
-                        "Integer",
-                        "Bigint",
-                        "Real",
-                        "Double",
-                        "Decimal",
-                        "Date",
-                        "Time",
-                        "Timestamp",
-                        "TimestampTz",
-                        "Varchar",
-                        "Uuid",
-                        "Varbinary",
-                        "Row",
-                        "Array",
-                        "Map"
-                      ]
-                    },
-                    "typeParameters": {
-                      "type": "object",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                      }
-                    }
-                  },
-                  "description": "Column type; adheres to Trino conventions",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "expression": {
-                  "type": "string",
-                  "description": "Trino SQL expression producing this column's value; present only for top-level columns"
-                },
-                "nestedColumns": {
-                  "type": "array",
-                  "description": "Nested columns for complex types (Row, Map, Array)",
-                  "items": {
-                    "$ref": "#/components/schemas/FilterAndProjectTransformColumn"
-                  }
-                }
-              },
-              "description": "Output columns and the expressions that produce their values",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "filterExpressions": {
-            "type": "array",
-            "description": "Filter predicates over the input table's columns; at most one is supported",
-            "items": {
-              "type": "string",
-              "description": "Filter predicates over the input table's columns; at most one is supported"
-            }
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          }
-        },
-        "description": "Properties for a filter and project transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "Forbidden": {
         "properties": {
           "message": {
@@ -21686,22 +21221,6 @@
         "description": "Authorization failed",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "GalaxyMetastore": {
-        "properties": {
-          "defaultBucket": {
-            "type": "string",
-            "description": "S3 bucket to use when storing data for new schemas"
-          },
-          "defaultDataLocation": {
-            "type": "string",
-            "description": "Default location to store data for new schemas"
-          }
-        },
-        "description": "Store metadata in the Galaxy metastore",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "GcsCatalog": {
@@ -21966,72 +21485,12 @@
           "Model Definitions"
         ]
       },
-      "GcsGalaxyMetastore": {
-        "properties": {
-          "defaultBucket": {
-            "type": "string",
-            "description": "GCS bucket to use when storing data for new schemas"
-          },
-          "defaultDataLocation": {
-            "type": "string",
-            "description": "Default location to store data for new schemas"
-          }
-        },
-        "description": "Store metadata in the Galaxy metastore",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "GcsHiveMetastore": {
-        "properties": {
-          "hiveMetastoreHost": {
-            "type": "string",
-            "description": "Hive metastore host url"
-          },
-          "hiveMetastorePort": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Hive metastore host port. Defaults to 9083.",
-            "nullable": false
-          },
-          "sshTunnelId": {
-            "type": "string",
-            "description": "SSH tunnel identifier"
-          }
-        },
-        "description": "Store metadata in a Hive metastore",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "GlueMetastore": {
-        "properties": {
-          "region": {
-            "type": "string",
-            "description": "AWS region"
-          },
-          "defaultBucket": {
-            "type": "string",
-            "description": "S3 bucket to use when storing data for new schemas"
-          },
-          "defaultDataLocation": {
-            "type": "string",
-            "description": "Default location to store data for new schemas"
-          },
-          "glueAccessKey": {
-            "type": "string",
-            "description": "AWS access key for AWS Glue access"
-          },
-          "glueSecretKey": {
-            "type": "string",
-            "description": "AWS secret key for AWS Glue access"
-          },
-          "glueRoleArn": {
-            "type": "string",
-            "description": "AWS cross account role for AWS Glue access"
-          }
-        },
-        "description": "Store metadata in AWS Glue",
+      "GrantKind": {
+        "type": "string",
+        "enum": [
+          "Allow",
+          "Deny"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -22043,77 +21502,19 @@
         ],
         "properties": {
           "grantKind": {
-            "type": "string",
             "description": "Grant kind (read only)",
-            "enum": [
-              "Allow",
-              "Deny"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GrantKind"
+              }
             ]
           },
           "privilege": {
             "type": "array",
             "description": "Privileges (read only)",
             "items": {
-              "type": "string",
               "description": "Privileges (read only)",
-              "enum": [
-                "ManageSecurity",
-                "CreateRole",
-                "CreateUser",
-                "CreateCluster",
-                "CreateCatalog",
-                "CreateAiModel",
-                "UseAiModel",
-                "ViewAuditLog",
-                "ManageBilling",
-                "ManageNotifications",
-                "ViewAllQueryHistory",
-                "ManageSso",
-                "SsoUserPasswordLogin",
-                "ViewAllDataLineage",
-                "UseCluster",
-                "EnableDisableCluster",
-                "MonitorCluster",
-                "TroubleshootQuery",
-                "CreateSchema",
-                "CreateTable",
-                "CreateBranch",
-                "Insert",
-                "Delete",
-                "Select",
-                "Update",
-                "ManageDataObservability",
-                "CreateSql",
-                "Execute",
-                "ManageServiceAccount",
-                "ManageServiceAccountToken",
-                "ManageOauthClient",
-                "ViewPublicOauthClient",
-                "ManageAccountWork",
-                "CreateTag",
-                "ApplyTag",
-                "GenerativeAiFeatures",
-                "ManageIngestStreams",
-                "CreateFunction",
-                "CancelQuery",
-                "ViewDataProduct",
-                "ManageCertification",
-                "DownloadQueryResults",
-                "ManageQueryRoutingRules",
-                "ManageIcehouseOps",
-                "CreateDataDomain",
-                "ViewAllQueryProfilerResults",
-                "CreateAgentSkill",
-                "UseAgentSkill",
-                "PublishDataProduct",
-                "CreateDataProduct",
-                "Alter",
-                "View",
-                "CreateExternalMcpServer",
-                "UseExternalMcpServer",
-                "CreateAgentPersona",
-                "UseAgentPersona"
-              ]
+              "$ref": "#/components/schemas/PrivilegeEnum"
             }
           }
         },
@@ -22132,11 +21533,11 @@
         ],
         "properties": {
           "grantKind": {
-            "type": "string",
             "description": "Grant kind",
-            "enum": [
-              "Allow",
-              "Deny"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GrantKind"
+              }
             ]
           },
           "entityId": {
@@ -22144,27 +21545,11 @@
             "description": "Entity ID"
           },
           "entityKind": {
-            "type": "string",
             "description": "Entity kind",
-            "enum": [
-              "Account",
-              "AiModel",
-              "AgentSkill",
-              "ExternalMcpServer",
-              "AgentPersona",
-              "Cluster",
-              "Catalog",
-              "Schema",
-              "Table",
-              "Column",
-              "Location",
-              "Function",
-              "Tag",
-              "TableBranch",
-              "Policy",
-              "RowFilter",
-              "DataProduct",
-              "DataDomain"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityKind"
+              }
             ]
           },
           "grantOption": {
@@ -22173,65 +21558,11 @@
             "nullable": false
           },
           "privilege": {
-            "type": "string",
             "description": "Privilege",
-            "enum": [
-              "ManageSecurity",
-              "CreateRole",
-              "CreateUser",
-              "CreateCluster",
-              "CreateCatalog",
-              "CreateAiModel",
-              "UseAiModel",
-              "ViewAuditLog",
-              "ManageBilling",
-              "ManageNotifications",
-              "ViewAllQueryHistory",
-              "ManageSso",
-              "SsoUserPasswordLogin",
-              "ViewAllDataLineage",
-              "UseCluster",
-              "EnableDisableCluster",
-              "MonitorCluster",
-              "TroubleshootQuery",
-              "CreateSchema",
-              "CreateTable",
-              "CreateBranch",
-              "Insert",
-              "Delete",
-              "Select",
-              "Update",
-              "ManageDataObservability",
-              "CreateSql",
-              "Execute",
-              "ManageServiceAccount",
-              "ManageServiceAccountToken",
-              "ManageOauthClient",
-              "ViewPublicOauthClient",
-              "ManageAccountWork",
-              "CreateTag",
-              "ApplyTag",
-              "GenerativeAiFeatures",
-              "ManageIngestStreams",
-              "CreateFunction",
-              "CancelQuery",
-              "ViewDataProduct",
-              "ManageCertification",
-              "DownloadQueryResults",
-              "ManageQueryRoutingRules",
-              "ManageIcehouseOps",
-              "CreateDataDomain",
-              "ViewAllQueryProfilerResults",
-              "CreateAgentSkill",
-              "UseAgentSkill",
-              "PublishDataProduct",
-              "CreateDataProduct",
-              "Alter",
-              "View",
-              "CreateExternalMcpServer",
-              "UseExternalMcpServer",
-              "CreateAgentPersona",
-              "UseAgentPersona"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrivilegeEnum"
+              }
             ]
           },
           "schemaName": {
@@ -22310,40 +21641,6 @@
           "Model Definitions"
         ]
       },
-      "HiveMetastore": {
-        "properties": {
-          "hiveMetastoreHost": {
-            "type": "string",
-            "description": "Hive metastore host url"
-          },
-          "hiveMetastorePort": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Hive metastore host port. Defaults to 9083.",
-            "nullable": false
-          },
-          "sshTunnelId": {
-            "type": "string",
-            "description": "SSH tunnel identifier"
-          }
-        },
-        "description": "Store metadata in a Hive metastore",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "IamAuth": {
-        "properties": {
-          "awsRoleArn": {
-            "type": "string",
-            "description": "ARN of the AWS IAM role"
-          }
-        },
-        "description": "AWS IAM role authentication",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "IngestColumn": {
         "required": [
           "columnId",
@@ -22392,25 +21689,11 @@
             ],
             "properties": {
               "typeId": {
-                "type": "string",
                 "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TypeId"
+                  }
                 ]
               },
               "typeParameters": {
@@ -22440,281 +21723,6 @@
           "Model Definitions"
         ]
       },
-      "IngestJsonTransformProperties": {
-        "required": [
-          "liveTableId",
-          "userDefinedSchema"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source table"
-          },
-          "userDefinedSchema": {
-            "type": "array",
-            "description": "Schema of the transformed table",
-            "items": {
-              "required": [
-                "columnId",
-                "fieldParserConfig",
-                "nestedColumns",
-                "trinoColumnName",
-                "trinoType"
-              ],
-              "properties": {
-                "columnId": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "ID of the transform column",
-                  "nullable": false
-                },
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the transform column; adheres to Trino conventions"
-                },
-                "fieldParserConfig": {
-                  "required": [
-                    "pointer"
-                  ],
-                  "properties": {
-                    "pointer": {
-                      "type": "string",
-                      "description": "JSON pointer (IETF RFC 6901)"
-                    },
-                    "parseParameters": {
-                      "type": "object",
-                      "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n"
-                      }
-                    }
-                  },
-                  "description": "JSON pointer (and parsing parameters) to the raw-table field transformed into this column value",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "trinoType": {
-                  "required": [
-                    "typeId"
-                  ],
-                  "properties": {
-                    "typeId": {
-                      "type": "string",
-                      "description": "Trino type enum",
-                      "enum": [
-                        "Boolean",
-                        "Integer",
-                        "Bigint",
-                        "Real",
-                        "Double",
-                        "Decimal",
-                        "Date",
-                        "Time",
-                        "Timestamp",
-                        "TimestampTz",
-                        "Varchar",
-                        "Uuid",
-                        "Varbinary",
-                        "Row",
-                        "Array",
-                        "Map"
-                      ]
-                    },
-                    "typeParameters": {
-                      "type": "object",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                      }
-                    }
-                  },
-                  "description": "Column type; adheres to Trino conventions",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "nestedColumns": {
-                  "type": "array",
-                  "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                  "items": {
-                    "$ref": "#/components/schemas/IngestColumn"
-                  }
-                }
-              },
-              "description": "Schema of the transformed table",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          },
-          "fanoutColumns": {
-            "type": "array",
-            "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-            "items": {
-              "required": [
-                "transform",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
-                },
-                "transform": {
-                  "type": "string",
-                  "description": "Transform applied to the column value to form the route",
-                  "enum": [
-                    "Identity"
-                  ]
-                }
-              },
-              "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "Properties for a JSON transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "IngestSchemaRegistryAvroTransformProperties": {
-        "required": [
-          "liveTableId",
-          "schemaRegistryId",
-          "subjectName"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source table"
-          },
-          "schemaRegistryId": {
-            "type": "string",
-            "description": "Schema registry id associated with the live table"
-          },
-          "subjectName": {
-            "type": "string",
-            "description": "Subject name in the schema registry"
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          },
-          "fanoutColumns": {
-            "type": "array",
-            "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-            "items": {
-              "required": [
-                "transform",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
-                },
-                "transform": {
-                  "type": "string",
-                  "description": "Transform applied to the column value to form the route",
-                  "enum": [
-                    "Identity"
-                  ]
-                }
-              },
-              "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "Properties for a schema registry Avro transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "InvalidArgument": {
         "required": [
           "detail",
@@ -22734,25 +21742,15 @@
           "Responses"
         ]
       },
-      "JsonParserConfig": {
-        "required": [
-          "pointer"
+      "JobStatus": {
+        "type": "string",
+        "enum": [
+          "Scheduled",
+          "Queued",
+          "InProgress",
+          "Completed",
+          "Failed"
         ],
-        "properties": {
-          "pointer": {
-            "type": "string",
-            "description": "JSON pointer (IETF RFC 6901)"
-          },
-          "parseParameters": {
-            "type": "object",
-            "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n"
-            }
-          }
-        },
-        "description": "JSON pointer (and parsing parameters) to the raw-table field transformed into this column value",
         "x-tags": [
           "Model Definitions"
         ]
@@ -22924,11 +21922,11 @@
                 "description": "SASL password"
               },
               "scramType": {
-                "type": "string",
                 "description": "SCRAM hash algorithm",
-                "enum": [
-                  "Sha256",
-                  "Sha512"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ScramType"
+                  }
                 ]
               }
             },
@@ -22993,11 +21991,11 @@
                 "description": "SASL password"
               },
               "scramType": {
-                "type": "string",
                 "description": "SCRAM hash algorithm",
-                "enum": [
-                  "Sha256",
-                  "Sha512"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/ScramType"
+                  }
                 ]
               }
             },
@@ -23007,51 +22005,6 @@
             ]
           }
         ],
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "KafkaIngestProperties": {
-        "required": [
-          "kafkaIngestSourceId",
-          "kafkaTopicName",
-          "latencyMode",
-          "partitionMaxBytesPerSec",
-          "startStrategy"
-        ],
-        "properties": {
-          "kafkaIngestSourceId": {
-            "type": "string",
-            "description": "ID of the Kafka ingest source obtained from the /kafkaIngestSource endpoint"
-          },
-          "kafkaTopicName": {
-            "type": "string",
-            "description": "Kafka topic name"
-          },
-          "startStrategy": {
-            "type": "string",
-            "description": "Stream start strategy",
-            "enum": [
-              "Earliest",
-              "Latest"
-            ]
-          },
-          "partitionMaxBytesPerSec": {
-            "format": "int64",
-            "type": "integer",
-            "description": "Throughput limit per partition",
-            "nullable": false
-          },
-          "latencyMode": {
-            "type": "string",
-            "description": "Latency mode for commits",
-            "enum": [
-              "BalancedMode",
-              "LowLatencyMode"
-            ]
-          }
-        },
-        "description": "Properties for a live table ingesting from Kafka",
         "x-tags": [
           "Model Definitions"
         ]
@@ -23109,6 +22062,36 @@
           }
         },
         "description": "Info for updating a Kafka ingest source",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "KafkaStartStrategy": {
+        "type": "string",
+        "enum": [
+          "Earliest",
+          "Latest"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "Kind": {
+        "type": "string",
+        "enum": [
+          "QualityExpression",
+          "SqlQuery"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "LatencyMode": {
+        "type": "string",
+        "enum": [
+          "BalancedMode",
+          "LowLatencyMode"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -23202,12 +22185,11 @@
             "description": "Table name"
           },
           "liveTableState": {
-            "type": "string",
             "description": "Table state",
-            "enum": [
-              "Stopped",
-              "Stopping",
-              "Running"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/LiveTableState"
+              }
             ]
           },
           "dataRetentionDays": {
@@ -23223,11 +22205,11 @@
             "nullable": false
           },
           "failureMode": {
-            "type": "string",
             "description": "Failure mode.",
-            "enum": [
-              "Continue",
-              "FailFast"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FailureMode"
+              }
             ]
           },
           "errorNotificationCount": {
@@ -23255,6 +22237,17 @@
           }
         },
         "description": "A managed live table",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "LiveTableState": {
+        "type": "string",
+        "enum": [
+          "Stopped",
+          "Stopping",
+          "Running"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -23298,12 +22291,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MongoDB cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -23403,12 +22395,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MongoDB cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -23622,12 +22613,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MySQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -23710,12 +22700,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "MySQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "connectionType": {
@@ -23874,87 +22863,6 @@
           "Model Definitions"
         ]
       },
-      "NewFileIngestProperties": {
-        "required": [
-          "fileFormat",
-          "fileIngestSourceId",
-          "pollingIntervalInMinutes"
-        ],
-        "properties": {
-          "fileIngestSourceId": {
-            "type": "string",
-            "description": "ID of the file ingest source obtained from the /fileIngestSource endpoint"
-          },
-          "pathSuffix": {
-            "type": "string",
-            "description": "Suffix to append to the name from ingest source"
-          },
-          "fileFormat": {
-            "type": "string",
-            "description": "File format",
-            "enum": [
-              "Json",
-              "Csv"
-            ]
-          },
-          "pollingIntervalInMinutes": {
-            "format": "int32",
-            "type": "integer",
-            "description": "List files in object storage every polling interval",
-            "nullable": false
-          },
-          "csvParameters": {
-            "required": [
-              "delimiter",
-              "escapeChar",
-              "numHeaderLinesToExclude",
-              "quoteChar"
-            ],
-            "properties": {
-              "delimiter": {
-                "type": "string",
-                "description": "CSV delimiter character",
-                "enum": [
-                  "Comma",
-                  "Tab",
-                  "Pipe",
-                  "Semicolon"
-                ]
-              },
-              "quoteChar": {
-                "type": "string",
-                "description": "CSV quote character",
-                "enum": [
-                  "DoubleQuote",
-                  "SingleQuote"
-                ]
-              },
-              "escapeChar": {
-                "type": "string",
-                "description": "CSV escape character",
-                "enum": [
-                  "DoubleQuote",
-                  "Backslash"
-                ]
-              },
-              "numHeaderLinesToExclude": {
-                "format": "int32",
-                "type": "integer",
-                "description": "Number of CSV header lines to exclude",
-                "nullable": false
-              }
-            },
-            "description": "CSV format parameters. Required for CSV format, must be absent for other formats",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          }
-        },
-        "description": "Properties required for creating a new live table ingesting from a file",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "NewFileIngestSource": {
         "required": [
           "bucket",
@@ -23996,136 +22904,6 @@
           "Model Definitions"
         ]
       },
-      "NewFilterAndProjectTransformColumn": {
-        "required": [
-          "expression",
-          "name",
-          "type"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Name of the output column; adheres to Trino conventions"
-          },
-          "type": {
-            "required": [
-              "typeId"
-            ],
-            "properties": {
-              "typeId": {
-                "type": "string",
-                "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
-                ]
-              },
-              "typeParameters": {
-                "type": "object",
-                "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                "additionalProperties": {
-                  "type": "string",
-                  "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                }
-              }
-            },
-            "description": "Column type; adheres to Trino conventions",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          },
-          "expression": {
-            "type": "string",
-            "description": "Trino SQL scalar expression over the input table's columns that produces this column's value"
-          },
-          "nestedColumns": {
-            "type": "array",
-            "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-            "items": {
-              "required": [
-                "name",
-                "type"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name of the nested field; adheres to Trino conventions"
-                },
-                "type": {
-                  "required": [
-                    "typeId"
-                  ],
-                  "properties": {
-                    "typeId": {
-                      "type": "string",
-                      "description": "Trino type enum",
-                      "enum": [
-                        "Boolean",
-                        "Integer",
-                        "Bigint",
-                        "Real",
-                        "Double",
-                        "Decimal",
-                        "Date",
-                        "Time",
-                        "Timestamp",
-                        "TimestampTz",
-                        "Varchar",
-                        "Uuid",
-                        "Varbinary",
-                        "Row",
-                        "Array",
-                        "Map"
-                      ]
-                    },
-                    "typeParameters": {
-                      "type": "object",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                      }
-                    }
-                  },
-                  "description": "Column type; adheres to Trino conventions",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "nestedColumns": {
-                  "type": "array",
-                  "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                  "items": {
-                    "$ref": "#/components/schemas/NewFilterAndProjectTransformNestedColumn"
-                  }
-                }
-              },
-              "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "Output columns of the transform; each carries its name, type, and the Trino SQL scalar expression over the input table's columns that produces its value",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "NewFilterAndProjectTransformNestedColumn": {
         "required": [
           "name",
@@ -24142,25 +22920,11 @@
             ],
             "properties": {
               "typeId": {
-                "type": "string",
                 "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TypeId"
+                  }
                 ]
               },
               "typeParameters": {
@@ -24186,472 +22950,6 @@
           }
         },
         "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NewFilterAndProjectTransformProperties": {
-        "required": [
-          "columns",
-          "filterExpressions",
-          "liveTableId"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source transform table"
-          },
-          "columns": {
-            "type": "array",
-            "description": "Output columns of the transform; each carries its name, type, and the Trino SQL scalar expression over the input table's columns that produces its value",
-            "items": {
-              "required": [
-                "expression",
-                "name",
-                "type"
-              ],
-              "properties": {
-                "name": {
-                  "type": "string",
-                  "description": "Name of the output column; adheres to Trino conventions"
-                },
-                "type": {
-                  "required": [
-                    "typeId"
-                  ],
-                  "properties": {
-                    "typeId": {
-                      "type": "string",
-                      "description": "Trino type enum",
-                      "enum": [
-                        "Boolean",
-                        "Integer",
-                        "Bigint",
-                        "Real",
-                        "Double",
-                        "Decimal",
-                        "Date",
-                        "Time",
-                        "Timestamp",
-                        "TimestampTz",
-                        "Varchar",
-                        "Uuid",
-                        "Varbinary",
-                        "Row",
-                        "Array",
-                        "Map"
-                      ]
-                    },
-                    "typeParameters": {
-                      "type": "object",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                      }
-                    }
-                  },
-                  "description": "Column type; adheres to Trino conventions",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "expression": {
-                  "type": "string",
-                  "description": "Trino SQL scalar expression over the input table's columns that produces this column's value"
-                },
-                "nestedColumns": {
-                  "type": "array",
-                  "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                  "items": {
-                    "required": [
-                      "name",
-                      "type"
-                    ],
-                    "properties": {
-                      "name": {
-                        "type": "string",
-                        "description": "Name of the nested field; adheres to Trino conventions"
-                      },
-                      "type": {
-                        "required": [
-                          "typeId"
-                        ],
-                        "properties": {
-                          "typeId": {
-                            "type": "string",
-                            "description": "Trino type enum",
-                            "enum": [
-                              "Boolean",
-                              "Integer",
-                              "Bigint",
-                              "Real",
-                              "Double",
-                              "Decimal",
-                              "Date",
-                              "Time",
-                              "Timestamp",
-                              "TimestampTz",
-                              "Varchar",
-                              "Uuid",
-                              "Varbinary",
-                              "Row",
-                              "Array",
-                              "Map"
-                            ]
-                          },
-                          "typeParameters": {
-                            "type": "object",
-                            "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                            "additionalProperties": {
-                              "type": "string",
-                              "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                            }
-                          }
-                        },
-                        "description": "Column type; adheres to Trino conventions",
-                        "x-tags": [
-                          "Model Definitions"
-                        ]
-                      },
-                      "nestedColumns": {
-                        "type": "array",
-                        "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                        "items": {
-                          "$ref": "#/components/schemas/NewFilterAndProjectTransformNestedColumn"
-                        }
-                      }
-                    },
-                    "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                    "x-tags": [
-                      "Model Definitions"
-                    ]
-                  }
-                }
-              },
-              "description": "Output columns of the transform; each carries its name, type, and the Trino SQL scalar expression over the input table's columns that produces its value",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "filterExpressions": {
-            "type": "array",
-            "description": "Trino SQL boolean predicates over the input table's columns that select which rows are emitted; at most one is supported",
-            "items": {
-              "type": "string",
-              "description": "Trino SQL boolean predicates over the input table's columns that select which rows are emitted; at most one is supported"
-            }
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          }
-        },
-        "description": "Properties required for creating a new filter and project transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NewIngestJsonTransformProperties": {
-        "required": [
-          "liveTableId",
-          "userDefinedSchema"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source table"
-          },
-          "userDefinedSchema": {
-            "type": "array",
-            "description": "Schema of the transformed table",
-            "items": {
-              "required": [
-                "fieldParserConfig",
-                "trinoColumnName",
-                "trinoType"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the transform column; adheres to Trino conventions"
-                },
-                "fieldParserConfig": {
-                  "required": [
-                    "pointer"
-                  ],
-                  "properties": {
-                    "pointer": {
-                      "type": "string",
-                      "description": "JSON pointer (IETF RFC 6901)"
-                    },
-                    "parseParameters": {
-                      "type": "object",
-                      "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n"
-                      }
-                    }
-                  },
-                  "description": "JSON pointer (and parsing parameters) to the raw-table field transformed into this column value",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "trinoType": {
-                  "required": [
-                    "typeId"
-                  ],
-                  "properties": {
-                    "typeId": {
-                      "type": "string",
-                      "description": "Trino type enum",
-                      "enum": [
-                        "Boolean",
-                        "Integer",
-                        "Bigint",
-                        "Real",
-                        "Double",
-                        "Decimal",
-                        "Date",
-                        "Time",
-                        "Timestamp",
-                        "TimestampTz",
-                        "Varchar",
-                        "Uuid",
-                        "Varbinary",
-                        "Row",
-                        "Array",
-                        "Map"
-                      ]
-                    },
-                    "typeParameters": {
-                      "type": "object",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                      "additionalProperties": {
-                        "type": "string",
-                        "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                      }
-                    }
-                  },
-                  "description": "Column type; adheres to Trino conventions",
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
-                },
-                "nestedColumns": {
-                  "type": "array",
-                  "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                  "items": {
-                    "$ref": "#/components/schemas/NewJsonIngestColumn"
-                  }
-                }
-              },
-              "description": "Schema of the transformed table",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          },
-          "fanoutColumns": {
-            "type": "array",
-            "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-            "items": {
-              "required": [
-                "transform",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
-                },
-                "transform": {
-                  "type": "string",
-                  "description": "Transform applied to the column value to form the route",
-                  "enum": [
-                    "Identity"
-                  ]
-                }
-              },
-              "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "Properties required for creating a new JSON transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NewIngestSchemaRegistryAvroTransformProperties": {
-        "required": [
-          "liveTableId",
-          "schemaRegistryId",
-          "subjectName"
-        ],
-        "properties": {
-          "liveTableId": {
-            "type": "string",
-            "description": "ID of the source table"
-          },
-          "schemaRegistryId": {
-            "type": "string",
-            "description": "Schema registry ID associated with the live table"
-          },
-          "subjectName": {
-            "type": "string",
-            "description": "Subject name in the schema registry"
-          },
-          "userDefinedPartitionSpec": {
-            "type": "array",
-            "description": "Custom partition spec for transform live tables",
-            "items": {
-              "required": [
-                "transformType",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Column name from IngestColumn or NewIngestColumn"
-                },
-                "transformType": {
-                  "type": "string",
-                  "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-                },
-                "bucketCount": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Bucket count when transformType=bucket",
-                  "nullable": false
-                },
-                "truncateWidth": {
-                  "format": "int32",
-                  "type": "integer",
-                  "description": "Width when transformType=truncate",
-                  "nullable": false
-                }
-              },
-              "description": "Custom partition spec for transform live tables",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "Sort column"
-          },
-          "fanoutColumns": {
-            "type": "array",
-            "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-            "items": {
-              "required": [
-                "transform",
-                "trinoColumnName"
-              ],
-              "properties": {
-                "trinoColumnName": {
-                  "type": "string",
-                  "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
-                },
-                "transform": {
-                  "type": "string",
-                  "description": "Transform applied to the column value to form the route",
-                  "enum": [
-                    "Identity"
-                  ]
-                }
-              },
-              "description": "Fans the table's output out into one sink table per distinct combination of these column values, instead of a single output table. Order is part of the route's identity, and the columns cannot be changed once the table exists",
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          }
-        },
-        "description": "Properties required for creating a new schema registry Avro transform live table",
         "x-tags": [
           "Model Definitions"
         ]
@@ -24696,25 +22994,11 @@
             ],
             "properties": {
               "typeId": {
-                "type": "string",
                 "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TypeId"
+                  }
                 ]
               },
               "typeParameters": {
@@ -24785,25 +23069,11 @@
             ],
             "properties": {
               "typeId": {
-                "type": "string",
                 "description": "Trino type enum",
-                "enum": [
-                  "Boolean",
-                  "Integer",
-                  "Bigint",
-                  "Real",
-                  "Double",
-                  "Decimal",
-                  "Date",
-                  "Time",
-                  "Timestamp",
-                  "TimestampTz",
-                  "Varchar",
-                  "Uuid",
-                  "Varbinary",
-                  "Row",
-                  "Array",
-                  "Map"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/TypeId"
+                  }
                 ]
               },
               "typeParameters": {
@@ -24829,91 +23099,6 @@
           }
         },
         "description": "An added column",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NewJsonSchema": {
-        "required": [
-          "columns"
-        ],
-        "properties": {
-          "columns": {
-            "type": "array",
-            "description": "A new set of columns for this table (replaces the old one)",
-            "items": {
-              "required": [
-                "typeKey"
-              ],
-              "properties": {
-                "typeKey": {
-                  "type": "string"
-                }
-              },
-              "description": "A new set of columns for this table (replaces the old one)",
-              "discriminator": {
-                "propertyName": "typeKey",
-                "mapping": {
-                  "newJsonIngestColumnInSchemaUpdate": "#/components/schemas/UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate",
-                  "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn2"
-                }
-              },
-              "x-tags": [
-                "Model Definitions"
-              ]
-            }
-          },
-          "sortColumnName": {
-            "type": "string",
-            "description": "If present, table storage will be sorted by this"
-          }
-        },
-        "description": "New schema for a JSON transform live table",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NewKafkaIngestProperties": {
-        "required": [
-          "kafkaIngestSourceId",
-          "kafkaTopicName",
-          "latencyMode",
-          "partitionMaxBytesPerSec",
-          "startStrategy"
-        ],
-        "properties": {
-          "kafkaIngestSourceId": {
-            "type": "string",
-            "description": "ID of the Kafka ingest source obtained from the /kafkaIngestSource endpoint"
-          },
-          "kafkaTopicName": {
-            "type": "string",
-            "description": "Kafka topic name"
-          },
-          "startStrategy": {
-            "type": "string",
-            "description": "Stream start strategy",
-            "enum": [
-              "Earliest",
-              "Latest"
-            ]
-          },
-          "partitionMaxBytesPerSec": {
-            "format": "int64",
-            "type": "integer",
-            "description": "Throughput limit per partition",
-            "nullable": false
-          },
-          "latencyMode": {
-            "type": "string",
-            "description": "Latency mode for commits",
-            "enum": [
-              "BalancedMode",
-              "LowLatencyMode"
-            ]
-          }
-        },
-        "description": "Properties required for creating a new live table ingesting from Kafka",
         "x-tags": [
           "Model Definitions"
         ]
@@ -24995,11 +23180,11 @@
             "nullable": false
           },
           "failureMode": {
-            "type": "string",
             "description": "Failure mode",
-            "enum": [
-              "Continue",
-              "FailFast"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/FailureMode"
+              }
             ]
           },
           "typeProperties": {
@@ -25058,7 +23243,7 @@
                     "propertyName": "typeKey",
                     "mapping": {
                       "newJsonIngestColumnInSchemaUpdate": "#/components/schemas/UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate",
-                      "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn2"
+                      "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn"
                     }
                   },
                   "x-tags": [
@@ -25126,11 +23311,11 @@
                 "description": "Suffix to append to the name from ingest source"
               },
               "fileFormat": {
-                "type": "string",
                 "description": "File format",
-                "enum": [
-                  "Json",
-                  "Csv"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/FileFormat"
+                  }
                 ]
               },
               "pollingIntervalInMinutes": {
@@ -25148,29 +23333,27 @@
                 ],
                 "properties": {
                   "delimiter": {
-                    "type": "string",
                     "description": "CSV delimiter character",
-                    "enum": [
-                      "Comma",
-                      "Tab",
-                      "Pipe",
-                      "Semicolon"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvDelimiter"
+                      }
                     ]
                   },
                   "quoteChar": {
-                    "type": "string",
                     "description": "CSV quote character",
-                    "enum": [
-                      "DoubleQuote",
-                      "SingleQuote"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvQuoteChar"
+                      }
                     ]
                   },
                   "escapeChar": {
-                    "type": "string",
                     "description": "CSV escape character",
-                    "enum": [
-                      "DoubleQuote",
-                      "Backslash"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvEscapeChar"
+                      }
                     ]
                   },
                   "numHeaderLinesToExclude": {
@@ -25232,25 +23415,11 @@
                       ],
                       "properties": {
                         "typeId": {
-                          "type": "string",
                           "description": "Trino type enum",
-                          "enum": [
-                            "Boolean",
-                            "Integer",
-                            "Bigint",
-                            "Real",
-                            "Double",
-                            "Decimal",
-                            "Date",
-                            "Time",
-                            "Timestamp",
-                            "TimestampTz",
-                            "Varchar",
-                            "Uuid",
-                            "Varbinary",
-                            "Row",
-                            "Array",
-                            "Map"
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TypeId"
+                            }
                           ]
                         },
                         "typeParameters": {
@@ -25290,25 +23459,11 @@
                             ],
                             "properties": {
                               "typeId": {
-                                "type": "string",
                                 "description": "Trino type enum",
-                                "enum": [
-                                  "Boolean",
-                                  "Integer",
-                                  "Bigint",
-                                  "Real",
-                                  "Double",
-                                  "Decimal",
-                                  "Date",
-                                  "Time",
-                                  "Timestamp",
-                                  "TimestampTz",
-                                  "Varchar",
-                                  "Uuid",
-                                  "Varbinary",
-                                  "Row",
-                                  "Array",
-                                  "Map"
+                                "allOf": [
+                                  {
+                                    "$ref": "#/components/schemas/TypeId"
+                                  }
                                 ]
                               },
                               "typeParameters": {
@@ -25463,25 +23618,11 @@
                       ],
                       "properties": {
                         "typeId": {
-                          "type": "string",
                           "description": "Trino type enum",
-                          "enum": [
-                            "Boolean",
-                            "Integer",
-                            "Bigint",
-                            "Real",
-                            "Double",
-                            "Decimal",
-                            "Date",
-                            "Time",
-                            "Timestamp",
-                            "TimestampTz",
-                            "Varchar",
-                            "Uuid",
-                            "Varbinary",
-                            "Row",
-                            "Array",
-                            "Map"
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TypeId"
+                            }
                           ]
                         },
                         "typeParameters": {
@@ -25566,10 +23707,11 @@
                       "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
                     },
                     "transform": {
-                      "type": "string",
                       "description": "Transform applied to the column value to form the route",
-                      "enum": [
-                        "Identity"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/FanoutTransform"
+                        }
                       ]
                     }
                   },
@@ -25668,10 +23810,11 @@
                       "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
                     },
                     "transform": {
-                      "type": "string",
                       "description": "Transform applied to the column value to form the route",
-                      "enum": [
-                        "Identity"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/FanoutTransform"
+                        }
                       ]
                     }
                   },
@@ -25715,11 +23858,11 @@
                 "description": "Kafka topic name"
               },
               "startStrategy": {
-                "type": "string",
                 "description": "Stream start strategy",
-                "enum": [
-                  "Earliest",
-                  "Latest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/KafkaStartStrategy"
+                  }
                 ]
               },
               "partitionMaxBytesPerSec": {
@@ -25729,11 +23872,11 @@
                 "nullable": false
               },
               "latencyMode": {
-                "type": "string",
                 "description": "Latency mode for commits",
-                "enum": [
-                  "BalancedMode",
-                  "LowLatencyMode"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LatencyMode"
+                  }
                 ]
               }
             },
@@ -25743,12 +23886,6 @@
             ]
           }
         ],
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "NoAuth": {
-        "description": "No authentication",
         "x-tags": [
           "Model Definitions"
         ]
@@ -25816,42 +23953,6 @@
         "description": "A specified resource is not found.",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "OpenSearchAccessKeyAuth": {
-        "properties": {
-          "accessKey": {
-            "type": "string",
-            "description": "AWS access key"
-          },
-          "secretKey": {
-            "type": "string",
-            "description": "AWS secret key"
-          },
-          "region": {
-            "type": "string",
-            "description": "AWS region"
-          }
-        },
-        "description": "Authenticate with an AWS access key and secret key pair",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "OpenSearchBasicAuth": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Username"
-          },
-          "password": {
-            "type": "string",
-            "description": "Password"
-          }
-        },
-        "description": "Authenticate with a username and password",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "OpenSearchCatalog": {
@@ -26148,22 +24249,6 @@
             ]
           }
         ],
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "OpenSearchCrossAccountRoleAuth": {
-        "properties": {
-          "roleArn": {
-            "type": "string",
-            "description": "AWS cross account role ARN"
-          },
-          "region": {
-            "type": "string",
-            "description": "AWS region"
-          }
-        },
-        "description": "Authenticate with an AWS cross account role",
         "x-tags": [
           "Model Definitions"
         ]
@@ -26852,38 +24937,6 @@
           "Model Definitions"
         ]
       },
-      "PartitionColumn": {
-        "required": [
-          "transformType",
-          "trinoColumnName"
-        ],
-        "properties": {
-          "trinoColumnName": {
-            "type": "string",
-            "description": "Column name from IngestColumn or NewIngestColumn"
-          },
-          "transformType": {
-            "type": "string",
-            "description": "One of {identity, year, month, day, hour, bucket, truncate, void}"
-          },
-          "bucketCount": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Bucket count when transformType=bucket",
-            "nullable": false
-          },
-          "truncateWidth": {
-            "format": "int32",
-            "type": "integer",
-            "description": "Width when transformType=truncate",
-            "nullable": false
-          }
-        },
-        "description": "Custom partition spec for transform live tables",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "PermissionDenied": {
         "required": [
           "detail",
@@ -26981,27 +25034,11 @@
             "description": "Entity ID"
           },
           "entityKind": {
-            "type": "string",
             "description": "Entity kind",
-            "enum": [
-              "Account",
-              "AiModel",
-              "AgentSkill",
-              "ExternalMcpServer",
-              "AgentPersona",
-              "Cluster",
-              "Catalog",
-              "Schema",
-              "Table",
-              "Column",
-              "Location",
-              "Function",
-              "Tag",
-              "TableBranch",
-              "Policy",
-              "RowFilter",
-              "DataProduct",
-              "DataDomain"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityKind"
+              }
             ]
           },
           "schemaName": {
@@ -27079,12 +25116,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "PostgreSQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -27149,12 +25185,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "PostgreSQL cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -27227,12 +25262,11 @@
             "description": "Principal ID"
           },
           "type": {
-            "type": "string",
             "description": "Principal type",
-            "enum": [
-              "User",
-              "Role",
-              "Group"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrincipalType"
+              }
             ]
           }
         },
@@ -27241,26 +25275,13 @@
           "Model Definitions"
         ]
       },
-      "PrivateLinkMongoDBConnection": {
-        "properties": {
-          "privateLinkId": {
-            "type": "string",
-            "description": "PrivateLink Identifier"
-          }
-        },
-        "description": "Connect to MongoDB via PrivateLink",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "PrivateLinkMySQLConnection": {
-        "properties": {
-          "privateLinkId": {
-            "type": "string",
-            "description": "PrivateLink Identifier"
-          }
-        },
-        "description": "Connect to MySQL via PrivateLink",
+      "PrincipalType": {
+        "type": "string",
+        "enum": [
+          "User",
+          "Role",
+          "Group"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -27300,11 +25321,11 @@
         ],
         "properties": {
           "grantKind": {
-            "type": "string",
             "description": "Grant kind",
-            "enum": [
-              "Allow",
-              "Deny"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/GrantKind"
+              }
             ]
           },
           "entityId": {
@@ -27312,27 +25333,11 @@
             "description": "Entity ID"
           },
           "entityKind": {
-            "type": "string",
             "description": "Entity kind",
-            "enum": [
-              "Account",
-              "AiModel",
-              "AgentSkill",
-              "ExternalMcpServer",
-              "AgentPersona",
-              "Cluster",
-              "Catalog",
-              "Schema",
-              "Table",
-              "Column",
-              "Location",
-              "Function",
-              "Tag",
-              "TableBranch",
-              "Policy",
-              "RowFilter",
-              "DataProduct",
-              "DataDomain"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityKind"
+              }
             ]
           },
           "grantOption": {
@@ -27341,65 +25346,11 @@
             "nullable": false
           },
           "privilege": {
-            "type": "string",
             "description": "Privilege",
-            "enum": [
-              "ManageSecurity",
-              "CreateRole",
-              "CreateUser",
-              "CreateCluster",
-              "CreateCatalog",
-              "CreateAiModel",
-              "UseAiModel",
-              "ViewAuditLog",
-              "ManageBilling",
-              "ManageNotifications",
-              "ViewAllQueryHistory",
-              "ManageSso",
-              "SsoUserPasswordLogin",
-              "ViewAllDataLineage",
-              "UseCluster",
-              "EnableDisableCluster",
-              "MonitorCluster",
-              "TroubleshootQuery",
-              "CreateSchema",
-              "CreateTable",
-              "CreateBranch",
-              "Insert",
-              "Delete",
-              "Select",
-              "Update",
-              "ManageDataObservability",
-              "CreateSql",
-              "Execute",
-              "ManageServiceAccount",
-              "ManageServiceAccountToken",
-              "ManageOauthClient",
-              "ViewPublicOauthClient",
-              "ManageAccountWork",
-              "CreateTag",
-              "ApplyTag",
-              "GenerativeAiFeatures",
-              "ManageIngestStreams",
-              "CreateFunction",
-              "CancelQuery",
-              "ViewDataProduct",
-              "ManageCertification",
-              "DownloadQueryResults",
-              "ManageQueryRoutingRules",
-              "ManageIcehouseOps",
-              "CreateDataDomain",
-              "ViewAllQueryProfilerResults",
-              "CreateAgentSkill",
-              "UseAgentSkill",
-              "PublishDataProduct",
-              "CreateDataProduct",
-              "Alter",
-              "View",
-              "CreateExternalMcpServer",
-              "UseExternalMcpServer",
-              "CreateAgentPersona",
-              "UseAgentPersona"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrivilegeEnum"
+              }
             ]
           },
           "schemaName": {
@@ -27416,6 +25367,70 @@
           }
         },
         "description": "A role privilege to grant",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "PrivilegeEnum": {
+        "type": "string",
+        "enum": [
+          "ManageSecurity",
+          "CreateRole",
+          "CreateUser",
+          "CreateCluster",
+          "CreateCatalog",
+          "CreateAiModel",
+          "UseAiModel",
+          "ViewAuditLog",
+          "ManageBilling",
+          "ManageNotifications",
+          "ViewAllQueryHistory",
+          "ManageSso",
+          "SsoUserPasswordLogin",
+          "ViewAllDataLineage",
+          "UseCluster",
+          "EnableDisableCluster",
+          "MonitorCluster",
+          "TroubleshootQuery",
+          "CreateSchema",
+          "CreateTable",
+          "CreateBranch",
+          "Insert",
+          "Delete",
+          "Select",
+          "Update",
+          "ManageDataObservability",
+          "CreateSql",
+          "Execute",
+          "ManageServiceAccount",
+          "ManageServiceAccountToken",
+          "ManageOauthClient",
+          "ViewPublicOauthClient",
+          "ManageAccountWork",
+          "CreateTag",
+          "ApplyTag",
+          "GenerativeAiFeatures",
+          "ManageIngestStreams",
+          "CreateFunction",
+          "CancelQuery",
+          "ViewDataProduct",
+          "ManageCertification",
+          "DownloadQueryResults",
+          "ManageQueryRoutingRules",
+          "ManageIcehouseOps",
+          "CreateDataDomain",
+          "ViewAllQueryProfilerResults",
+          "CreateAgentSkill",
+          "UseAgentSkill",
+          "PublishDataProduct",
+          "CreateDataProduct",
+          "Alter",
+          "View",
+          "CreateExternalMcpServer",
+          "UseExternalMcpServer",
+          "CreateAgentPersona",
+          "UseAgentPersona"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -27742,26 +25757,6 @@
           "Model Definitions"
         ]
       },
-      "RedshiftCrossAccountRoleAuth": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "Username"
-          },
-          "roleArn": {
-            "type": "string",
-            "description": "AWS cross account role ARN"
-          },
-          "region": {
-            "type": "string",
-            "description": "AWS region"
-          }
-        },
-        "description": "Authenticate with an AWS cross account role",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "ResourceExhausted": {
         "required": [
           "detail",
@@ -27801,6 +25796,16 @@
           "Responses"
         ]
       },
+      "RevokeAction": {
+        "type": "string",
+        "enum": [
+          "RevokeGrantOption",
+          "RemoveRoleGrant"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
       "RevokePrivilege": {
         "required": [
           "entityId",
@@ -27814,89 +25819,19 @@
             "description": "Entity ID"
           },
           "entityKind": {
-            "type": "string",
             "description": "Entity kind",
-            "enum": [
-              "Account",
-              "AiModel",
-              "AgentSkill",
-              "ExternalMcpServer",
-              "AgentPersona",
-              "Cluster",
-              "Catalog",
-              "Schema",
-              "Table",
-              "Column",
-              "Location",
-              "Function",
-              "Tag",
-              "TableBranch",
-              "Policy",
-              "RowFilter",
-              "DataProduct",
-              "DataDomain"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/EntityKind"
+              }
             ]
           },
           "privilege": {
-            "type": "string",
             "description": "Privilege",
-            "enum": [
-              "ManageSecurity",
-              "CreateRole",
-              "CreateUser",
-              "CreateCluster",
-              "CreateCatalog",
-              "CreateAiModel",
-              "UseAiModel",
-              "ViewAuditLog",
-              "ManageBilling",
-              "ManageNotifications",
-              "ViewAllQueryHistory",
-              "ManageSso",
-              "SsoUserPasswordLogin",
-              "ViewAllDataLineage",
-              "UseCluster",
-              "EnableDisableCluster",
-              "MonitorCluster",
-              "TroubleshootQuery",
-              "CreateSchema",
-              "CreateTable",
-              "CreateBranch",
-              "Insert",
-              "Delete",
-              "Select",
-              "Update",
-              "ManageDataObservability",
-              "CreateSql",
-              "Execute",
-              "ManageServiceAccount",
-              "ManageServiceAccountToken",
-              "ManageOauthClient",
-              "ViewPublicOauthClient",
-              "ManageAccountWork",
-              "CreateTag",
-              "ApplyTag",
-              "GenerativeAiFeatures",
-              "ManageIngestStreams",
-              "CreateFunction",
-              "CancelQuery",
-              "ViewDataProduct",
-              "ManageCertification",
-              "DownloadQueryResults",
-              "ManageQueryRoutingRules",
-              "ManageIcehouseOps",
-              "CreateDataDomain",
-              "ViewAllQueryProfilerResults",
-              "CreateAgentSkill",
-              "UseAgentSkill",
-              "PublishDataProduct",
-              "CreateDataProduct",
-              "Alter",
-              "View",
-              "CreateExternalMcpServer",
-              "UseExternalMcpServer",
-              "CreateAgentPersona",
-              "UseAgentPersona"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/PrivilegeEnum"
+              }
             ]
           },
           "schemaName": {
@@ -27912,11 +25847,11 @@
             "description": "Column name"
           },
           "revokeAction": {
-            "type": "string",
             "description": "Revoke grant option or remove role privilege",
-            "enum": [
-              "RevokeGrantOption",
-              "RemoveRoleGrant"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/RevokeAction"
+              }
             ]
           }
         },
@@ -28537,46 +26472,6 @@
           "Model Definitions"
         ]
       },
-      "SaslPlainAuth": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "SASL username"
-          },
-          "password": {
-            "type": "string",
-            "description": "SASL password"
-          }
-        },
-        "description": "SASL/PLAIN authentication over TLS",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "SaslScramAuth": {
-        "properties": {
-          "username": {
-            "type": "string",
-            "description": "SASL username"
-          },
-          "password": {
-            "type": "string",
-            "description": "SASL password"
-          },
-          "scramType": {
-            "type": "string",
-            "description": "SCRAM hash algorithm",
-            "enum": [
-              "Sha256",
-              "Sha512"
-            ]
-          }
-        },
-        "description": "SASL/SCRAM authentication over TLS",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "Schema": {
         "required": [
           "contacts",
@@ -28726,20 +26621,11 @@
             "description": "Default schema name, used when tables without schemas were discovered (read only)"
           },
           "status": {
-            "type": "string",
             "description": "Status of schema discovery (read only)",
-            "enum": [
-              "Scheduled",
-              "Running",
-              "Errored",
-              "Success",
-              "RescanScheduled",
-              "RescanRunning",
-              "ApplyScheduled",
-              "ApplyRunning",
-              "ApplyErrored",
-              "ApplySuccess",
-              "Deprecated"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SchemaDiscoveryStatus"
+              }
             ]
           },
           "basedOnSchemaDiscoveryId": {
@@ -28793,8 +26679,37 @@
           "Model Definitions"
         ]
       },
+      "SchemaDiscoveryStatus": {
+        "type": "string",
+        "enum": [
+          "Scheduled",
+          "Running",
+          "Errored",
+          "Success",
+          "RescanScheduled",
+          "RescanRunning",
+          "ApplyScheduled",
+          "ApplyRunning",
+          "ApplyErrored",
+          "ApplySuccess",
+          "Deprecated"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
       "ScopesPatch": {
         "description": "Policy scopes",
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
+      "ScramType": {
+        "type": "string",
+        "enum": [
+          "Sha256",
+          "Sha512"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -28890,6 +26805,18 @@
           "Model Definitions"
         ]
       },
+      "Severity": {
+        "type": "string",
+        "enum": [
+          "Low",
+          "Medium",
+          "High",
+          "Critical"
+        ],
+        "x-tags": [
+          "Model Definitions"
+        ]
+      },
       "SeverityEvaluationCounts": {
         "required": [
           "failedEvaluations",
@@ -28899,13 +26826,11 @@
         ],
         "properties": {
           "severity": {
-            "type": "string",
             "description": "Data quality check severity",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "totalEvaluations": {
@@ -28970,12 +26895,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Snowflake cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "accountIdentifier": {
@@ -29041,12 +26965,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "Snowflake cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "accountIdentifier": {
@@ -29165,14 +27088,11 @@
         ],
         "properties": {
           "status": {
-            "type": "string",
             "description": "SQL job status (read only)",
-            "enum": [
-              "Scheduled",
-              "Queued",
-              "InProgress",
-              "Completed",
-              "Failed"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobStatus"
+              }
             ]
           },
           "startedAt": {
@@ -29275,14 +27195,11 @@
             "description": "ID of a SQL job (read only)"
           },
           "status": {
-            "type": "string",
             "description": "SQL job status (read only)",
-            "enum": [
-              "Scheduled",
-              "Queued",
-              "InProgress",
-              "Completed",
-              "Failed"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/JobStatus"
+              }
             ]
           },
           "updatedAt": {
@@ -29352,12 +27269,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "SQL Server cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -29417,12 +27333,11 @@
             "nullable": false
           },
           "cloudKind": {
-            "type": "string",
             "description": "SQL Server cloud kind. Defaults to AWS.",
-            "enum": [
-              "AWS",
-              "AZURE",
-              "GCP"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/CloudKind"
+              }
             ]
           },
           "endpoint": {
@@ -29461,34 +27376,15 @@
           "Model Definitions"
         ]
       },
-      "SshTunnelMongoDBConnection": {
-        "properties": {
-          "sshTunnelId": {
-            "type": "string",
-            "description": "SSH tunnel identifier"
-          },
-          "hosts": {
-            "type": "string",
-            "description": "MongoDB hosts"
-          }
-        },
-        "description": "Connect to MongoDB via SSH Tunnel",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "SshTunnelMySQLConnection": {
-        "properties": {
-          "sshTunnelId": {
-            "type": "string",
-            "description": "SSH tunnel identifier"
-          },
-          "host": {
-            "type": "string",
-            "description": "MySQL host"
-          }
-        },
-        "description": "Connect to MySQL via SSH Tunnel",
+      "StatementStatus": {
+        "type": "string",
+        "enum": [
+          "Waiting",
+          "Applying",
+          "Success",
+          "Errored",
+          "Canceled"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -29663,43 +27559,35 @@
           "Model Definitions"
         ]
       },
-      "Type": {
-        "required": [
-          "typeId"
+      "TypeEnum": {
+        "type": "string",
+        "enum": [
+          "TermsOfService"
         ],
-        "properties": {
-          "typeId": {
-            "type": "string",
-            "description": "Trino type enum",
-            "enum": [
-              "Boolean",
-              "Integer",
-              "Bigint",
-              "Real",
-              "Double",
-              "Decimal",
-              "Date",
-              "Time",
-              "Timestamp",
-              "TimestampTz",
-              "Varchar",
-              "Uuid",
-              "Varbinary",
-              "Row",
-              "Array",
-              "Map"
-            ]
-          },
-          "typeParameters": {
-            "type": "object",
-            "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-            "additionalProperties": {
-              "type": "string",
-              "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-            }
-          }
-        },
-        "description": "Column type; adheres to Trino conventions",
+        "x-tags": [
+          "Responses"
+        ]
+      },
+      "TypeId": {
+        "type": "string",
+        "enum": [
+          "Boolean",
+          "Integer",
+          "Bigint",
+          "Real",
+          "Double",
+          "Decimal",
+          "Date",
+          "Time",
+          "Timestamp",
+          "TimestampTz",
+          "Varchar",
+          "Uuid",
+          "Varbinary",
+          "Row",
+          "Array",
+          "Map"
+        ],
         "x-tags": [
           "Model Definitions"
         ]
@@ -29749,11 +27637,11 @@
                 "description": "Suffix to append to the name from ingest source"
               },
               "fileFormat": {
-                "type": "string",
                 "description": "File format",
-                "enum": [
-                  "Json",
-                  "Csv"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/FileFormat"
+                  }
                 ]
               },
               "pollingIntervalInMinutes": {
@@ -29771,29 +27659,27 @@
                 ],
                 "properties": {
                   "delimiter": {
-                    "type": "string",
                     "description": "CSV delimiter character",
-                    "enum": [
-                      "Comma",
-                      "Tab",
-                      "Pipe",
-                      "Semicolon"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvDelimiter"
+                      }
                     ]
                   },
                   "quoteChar": {
-                    "type": "string",
                     "description": "CSV quote character",
-                    "enum": [
-                      "DoubleQuote",
-                      "SingleQuote"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvQuoteChar"
+                      }
                     ]
                   },
                   "escapeChar": {
-                    "type": "string",
                     "description": "CSV escape character",
-                    "enum": [
-                      "DoubleQuote",
-                      "Backslash"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/CsvEscapeChar"
+                      }
                     ]
                   },
                   "numHeaderLinesToExclude": {
@@ -29862,25 +27748,11 @@
                       ],
                       "properties": {
                         "typeId": {
-                          "type": "string",
                           "description": "Trino type enum",
-                          "enum": [
-                            "Boolean",
-                            "Integer",
-                            "Bigint",
-                            "Real",
-                            "Double",
-                            "Decimal",
-                            "Date",
-                            "Time",
-                            "Timestamp",
-                            "TimestampTz",
-                            "Varchar",
-                            "Uuid",
-                            "Varbinary",
-                            "Row",
-                            "Array",
-                            "Map"
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TypeId"
+                            }
                           ]
                         },
                         "typeParameters": {
@@ -30040,25 +27912,11 @@
                       ],
                       "properties": {
                         "typeId": {
-                          "type": "string",
                           "description": "Trino type enum",
-                          "enum": [
-                            "Boolean",
-                            "Integer",
-                            "Bigint",
-                            "Real",
-                            "Double",
-                            "Decimal",
-                            "Date",
-                            "Time",
-                            "Timestamp",
-                            "TimestampTz",
-                            "Varchar",
-                            "Uuid",
-                            "Varbinary",
-                            "Row",
-                            "Array",
-                            "Map"
+                          "allOf": [
+                            {
+                              "$ref": "#/components/schemas/TypeId"
+                            }
                           ]
                         },
                         "typeParameters": {
@@ -30143,10 +28001,11 @@
                       "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
                     },
                     "transform": {
-                      "type": "string",
                       "description": "Transform applied to the column value to form the route",
-                      "enum": [
-                        "Identity"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/FanoutTransform"
+                        }
                       ]
                     }
                   },
@@ -30245,10 +28104,11 @@
                       "description": "Name of the column to route on, from IngestColumn or NewIngestColumn"
                     },
                     "transform": {
-                      "type": "string",
                       "description": "Transform applied to the column value to form the route",
-                      "enum": [
-                        "Identity"
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/FanoutTransform"
+                        }
                       ]
                     }
                   },
@@ -30292,11 +28152,11 @@
                 "description": "Kafka topic name"
               },
               "startStrategy": {
-                "type": "string",
                 "description": "Stream start strategy",
-                "enum": [
-                  "Earliest",
-                  "Latest"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/KafkaStartStrategy"
+                  }
                 ]
               },
               "partitionMaxBytesPerSec": {
@@ -30306,11 +28166,11 @@
                 "nullable": false
               },
               "latencyMode": {
-                "type": "string",
                 "description": "Latency mode for commits",
-                "enum": [
-                  "BalancedMode",
-                  "LowLatencyMode"
+                "allOf": [
+                  {
+                    "$ref": "#/components/schemas/LatencyMode"
+                  }
                 ]
               }
             },
@@ -30376,11 +28236,11 @@
             "nullable": false
           },
           "processingMode": {
-            "type": "string",
             "description": "Cluster query processing mode",
-            "enum": [
-              "Batch",
-              "WarpSpeed"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ClusterQueryProcessingMode"
+              }
             ]
           },
           "minWorkers": {
@@ -30439,22 +28299,11 @@
             "description": "Column mask expression"
           },
           "columnMaskType": {
-            "type": "string",
             "description": "Column mask type",
-            "enum": [
-              "Any",
-              "Integer",
-              "Boolean",
-              "Date",
-              "Decimal",
-              "Real",
-              "Double",
-              "Timestamp",
-              "TimestampWithTimeZone",
-              "Time",
-              "TimeWithTimeZone",
-              "Varbinary",
-              "Varchar"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/ColumnMaskType"
+              }
             ]
           },
           "description": {
@@ -30572,24 +28421,19 @@
             "description": "Either expression or SQL query that implements the data quality check logic."
           },
           "severity": {
-            "type": "string",
             "description": "Severity level of check failures",
-            "enum": [
-              "Low",
-              "Medium",
-              "High",
-              "Critical"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Severity"
+              }
             ]
           },
           "category": {
-            "type": "string",
             "description": "Category of data quality check",
-            "enum": [
-              "Validity",
-              "Completeness",
-              "Consistency",
-              "Accuracy",
-              "None"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Category"
+              }
             ]
           },
           "clusterId": {
@@ -30916,7 +28760,7 @@
           "propertyName": "typeKey",
           "mapping": {
             "newJsonIngestColumnInSchemaUpdate": "#/components/schemas/UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate",
-            "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn2"
+            "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn"
           }
         },
         "x-tags": [
@@ -30924,22 +28768,6 @@
         ]
       },
       "UpdatedJsonIngestColumnExistingJsonIngestColumn": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/UpdatedJsonIngestColumn"
-          },
-          {
-            "description": "An existing column; same ID but other properties may differ",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          }
-        ],
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "UpdatedJsonIngestColumnExistingJsonIngestColumn2": {
         "allOf": [
           {
             "$ref": "#/components/schemas/UpdatedJsonIngestColumn"
@@ -30991,25 +28819,11 @@
                 ],
                 "properties": {
                   "typeId": {
-                    "type": "string",
                     "description": "Trino type enum",
-                    "enum": [
-                      "Boolean",
-                      "Integer",
-                      "Bigint",
-                      "Real",
-                      "Double",
-                      "Decimal",
-                      "Date",
-                      "Time",
-                      "Timestamp",
-                      "TimestampTz",
-                      "Varchar",
-                      "Uuid",
-                      "Varbinary",
-                      "Row",
-                      "Array",
-                      "Map"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TypeId"
+                      }
                     ]
                   },
                   "typeParameters": {
@@ -31030,25 +28844,7 @@
                 "type": "array",
                 "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
                 "items": {
-                  "required": [
-                    "typeKey"
-                  ],
-                  "properties": {
-                    "typeKey": {
-                      "type": "string"
-                    }
-                  },
-                  "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                  "discriminator": {
-                    "propertyName": "typeKey",
-                    "mapping": {
-                      "newJsonIngestColumnInSchemaUpdate": "#/components/schemas/UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate2",
-                      "existingJsonIngestColumn": "#/components/schemas/UpdatedJsonIngestColumnExistingJsonIngestColumn"
-                    }
-                  },
-                  "x-tags": [
-                    "Model Definitions"
-                  ]
+                  "$ref": "#/components/schemas/UpdatedJsonIngestColumn"
                 }
               }
             },
@@ -31108,124 +28904,11 @@
                 ],
                 "properties": {
                   "typeId": {
-                    "type": "string",
                     "description": "Trino type enum",
-                    "enum": [
-                      "Boolean",
-                      "Integer",
-                      "Bigint",
-                      "Real",
-                      "Double",
-                      "Decimal",
-                      "Date",
-                      "Time",
-                      "Timestamp",
-                      "TimestampTz",
-                      "Varchar",
-                      "Uuid",
-                      "Varbinary",
-                      "Row",
-                      "Array",
-                      "Map"
-                    ]
-                  },
-                  "typeParameters": {
-                    "type": "object",
-                    "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n",
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "Parameters for completing the type specification.\nTypes Decimal, Time, Timestamp, and TimestampTz require a parameter named `precision`, which is the number of digits.\nType Decimal also requires a parameter named `scale`, which is the number of digits to the right of the decimal point.\n"
-                    }
-                  }
-                },
-                "description": "Column type; adheres to Trino conventions",
-                "x-tags": [
-                  "Model Definitions"
-                ]
-              },
-              "nestedColumns": {
-                "type": "array",
-                "description": "Nested columns for complex types (Row, Map, Array).\nFor primitive types, this list is empty.\nFor the Row type, this contains the fields of the row.\nFor the Map type, this contains the key and value types.\nFor the Array type, this contains the single element type.\n",
-                "items": {
-                  "$ref": "#/components/schemas/NewJsonIngestColumnInSchemaUpdate"
-                }
-              }
-            },
-            "description": "An added column",
-            "x-tags": [
-              "Model Definitions"
-            ]
-          }
-        ],
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "UpdatedJsonIngestColumnNewJsonIngestColumnInSchemaUpdate2": {
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/UpdatedJsonIngestColumn"
-          },
-          {
-            "required": [
-              "fieldParserConfig",
-              "nestedColumns",
-              "trinoColumnName",
-              "trinoType"
-            ],
-            "properties": {
-              "trinoColumnName": {
-                "type": "string",
-                "description": "Name of the transform column; adheres to Trino conventions"
-              },
-              "fieldParserConfig": {
-                "required": [
-                  "pointer"
-                ],
-                "properties": {
-                  "pointer": {
-                    "type": "string",
-                    "description": "JSON pointer (IETF RFC 6901)"
-                  },
-                  "parseParameters": {
-                    "type": "object",
-                    "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n",
-                    "additionalProperties": {
-                      "type": "string",
-                      "description": "Parameters for parsing Varchar and time types.\nFor Varchar, the only allowed parameter is \"varchar.type\", with valid values \"scalar\" or \"json\".\nFor Timestamp and TimestampTz, the only allowed parameters are:\n  - \"timestamp.converter\", with valid values \"unixtime\" or \"iso8601\".\n  - \"timestamp.unit\", with valid values \"nanos\", \"micros\", \"millis\", \"secs\", \"mins\", \"hours\", or \"days\".\n"
-                    }
-                  }
-                },
-                "description": "JSON pointer (and parsing parameters) to the raw-table field transformed into this column value",
-                "x-tags": [
-                  "Model Definitions"
-                ]
-              },
-              "trinoType": {
-                "required": [
-                  "typeId"
-                ],
-                "properties": {
-                  "typeId": {
-                    "type": "string",
-                    "description": "Trino type enum",
-                    "enum": [
-                      "Boolean",
-                      "Integer",
-                      "Bigint",
-                      "Real",
-                      "Double",
-                      "Decimal",
-                      "Date",
-                      "Time",
-                      "Timestamp",
-                      "TimestampTz",
-                      "Varchar",
-                      "Uuid",
-                      "Varbinary",
-                      "Row",
-                      "Array",
-                      "Map"
+                    "allOf": [
+                      {
+                        "$ref": "#/components/schemas/TypeId"
+                      }
                     ]
                   },
                   "typeParameters": {
@@ -31479,10 +29162,11 @@
         ],
         "properties": {
           "type": {
-            "type": "string",
             "description": "Violation type",
-            "enum": [
-              "TermsOfService"
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TypeEnum"
+              }
             ]
           },
           "subject": {

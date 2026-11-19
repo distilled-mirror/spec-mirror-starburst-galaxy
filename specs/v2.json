@@ -426,6 +426,13 @@
     }
   },
   "components": {
+    "securitySchemes": {
+      "accessToken": {
+        "type": "http",
+        "scheme": "bearer",
+        "bearerFormat": "Access token"
+      }
+    },
     "schemas": {
       "AlreadyExists": {
         "required": [
@@ -755,12 +762,6 @@
           "Model Definitions"
         ]
       },
-      "Default": {
-        "description": "Reference the account's default Data Domain",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
       "Exists": {
         "properties": {
           "message": {
@@ -803,21 +804,6 @@
         "description": "Authorization failed",
         "x-tags": [
           "Responses"
-        ]
-      },
-      "Id": {
-        "required": [
-          "id"
-        ],
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Data Domain ID"
-          }
-        },
-        "description": "Reference a Data Domain by its id",
-        "x-tags": [
-          "Model Definitions"
         ]
       },
       "InvalidArgument": {
@@ -871,21 +857,6 @@
           }
         },
         "description": "Any links for this Data Product",
-        "x-tags": [
-          "Model Definitions"
-        ]
-      },
-      "Name": {
-        "required": [
-          "name"
-        ],
-        "properties": {
-          "name": {
-            "type": "string",
-            "description": "Data Domain name"
-          }
-        },
-        "description": "Reference a Data Domain by its name",
         "x-tags": [
           "Model Definitions"
         ]
