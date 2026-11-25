@@ -17032,6 +17032,13 @@
           "parentProjectId": {
             "type": "string",
             "description": "The Google Cloud Project ID to bill for the export. Mutually required with projectId"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to BigQuery",
@@ -17122,6 +17129,13 @@
           },
           "deploymentType": {
             "type": "string"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to Cassandra, with options for integration with AstraDB",
@@ -17355,6 +17369,17 @@
           "catalogName": {
             "type": "string",
             "description": "Catalog name (read only)"
+          },
+          "catalogType": {
+            "type": "string",
+            "description": "Type segment of the type-specific catalog endpoint that serves this catalog. Absent if no such endpoint exists (read only)"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog (read only)",
@@ -17380,6 +17405,34 @@
           "catalogName": {
             "type": "string",
             "description": "Catalog name (read only)"
+          },
+          "catalogType": {
+            "type": "string",
+            "description": "Type segment of the type-specific catalog endpoint that serves this catalog. Absent if no such endpoint exists (read only)"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "required": [
+                "name",
+                "tagId"
+              ],
+              "properties": {
+                "tagId": {
+                  "type": "string",
+                  "description": "Tag ID (read only)"
+                },
+                "name": {
+                  "type": "string",
+                  "description": "Tag name (read only)"
+                }
+              },
+              "description": "Tags assigned directly to this catalog (read only)",
+              "x-tags": [
+                "Model Definitions"
+              ]
+            }
           },
           "numberOfChecks": {
             "format": "int32",
@@ -21285,6 +21338,13 @@
             "type": "integer",
             "description": "Maximum metadata staleness in seconds (30, 60, 90, or 120)",
             "nullable": false
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to GCS",
@@ -22331,6 +22391,13 @@
             "type": "boolean",
             "description": "Is federated database. Defaults to false.",
             "nullable": false
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to MongoDB",
@@ -22636,6 +22703,13 @@
           "password": {
             "type": "string",
             "description": "MySQL database password"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to MySQL",
@@ -24007,6 +24081,13 @@
           "sshTunnelId": {
             "type": "string",
             "description": "SSH tunnel identifier"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to OpenSearch",
@@ -25157,6 +25238,13 @@
           "privateLinkId": {
             "type": "string",
             "description": "PrivateLink identifier"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to PostgreSQL",
@@ -25499,6 +25587,13 @@
           "sshTunnelId": {
             "type": "string",
             "description": "SSH tunnel identifier"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to AWS Redshift",
@@ -26173,6 +26268,13 @@
             "type": "integer",
             "description": "Maximum metadata staleness in seconds (30, 60, 90, or 120)",
             "nullable": false
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to S3",
@@ -26937,6 +27039,13 @@
           "role": {
             "type": "string",
             "description": "Snowflake role"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to Snowflake",
@@ -27305,6 +27414,13 @@
           "privateLinkId": {
             "type": "string",
             "description": "PrivateLink identifier"
+          },
+          "tags": {
+            "type": "array",
+            "description": "Tags assigned directly to this catalog (read only)",
+            "items": {
+              "$ref": "#/components/schemas/TagName"
+            }
           }
         },
         "description": "A catalog connecting to SQL Server",
@@ -27530,7 +27646,7 @@
             "description": "Tag name (read only)"
           }
         },
-        "description": "Any tags set for this catalog (read only)",
+        "description": "Tags assigned directly to this catalog (read only)",
         "x-tags": [
           "Model Definitions"
         ]
